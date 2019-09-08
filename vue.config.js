@@ -4,7 +4,7 @@ const config = require('./src/config')
 const resolve = dir => {
   return path.join(__dirname, dir)
 }
-const BASE_URL = config.appName ? '/' + config.appName + '/' : '/'
+const BASE_URL = config.appName && process.env.NODE_ENV == 'production' ? '/' + config.appName + '/' : '/'
 
 module.exports = {
   publicPath: BASE_URL,

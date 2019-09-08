@@ -1,18 +1,34 @@
 import axios from 'axios'
+import config from '@src/config'
+import Cookies from 'js-cookie'
 
-axios.interceptors.request.use(function (config) {
-  return config;
-}, function (error) {
-  return Promise.reject(error);
-});
+axios.interceptors.request.use(conf=> {
+  conf.withCredentials = true
+  let key = config.loginOpts.cookieKey
+  conf.headers = Object.assign(conf.headers, {
+    hualvmall_authorization: Cookies.get(key) || ''
+  });
+  return conf
+}, err=> {
+  console.log(err)
+  return Promise.resolve(err);
+})
 
 axios.interceptors.response.use(function (response) {
-  if(response.ok) {
+  if(response.data.errorCode == 0 || response.data.errorCode == '0') {
+    response.data.ok = true
     return response.data
-  } else if (response.errorCode == '401' || response.errorCode == 401){
+  } else if (response.data.errorCode == '401' || response.data.errorCode == 401){
     return {
       errorCode: 401,
       errorMsg: '您无权限操作',
+      ok: false,
+      data: {}
+    }
+  } else if(response.data.errorCode == '400' || response.data.errorCode == 400) {
+    return {
+      errorCode: 400,
+      errorMsg: response.data.errorMsg + ':' + response.data.info,
       ok: false,
       data: {}
     }

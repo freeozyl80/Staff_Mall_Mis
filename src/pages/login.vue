@@ -1,7 +1,7 @@
 <template>
   <div class="mg-login">
     <div class="mg-login-area">
-        <h2>超级管理员登录系统</h2>
+        <h2>电商管理系统</h2>
 
         <Form ref="formValidate" :rules="ruleValidate" :model="formValidate" :label-width="60" class="mg-form">
 
@@ -11,6 +11,13 @@
 
           <FormItem class="mg-form-item" label="密码" prop="pwd" required>
             <Input v-model="formValidate.pwd" placeholder="请输入密码" type="password"></Input>
+          </FormItem>
+
+          <FormItem class="mg-form-item" label="类型" prop="type">
+            <RadioGroup v-model="formValidate.type">
+              <Radio label="1">超级管理员</Radio>
+              <Radio label="2">普通管理员</Radio>
+            </RadioGroup> 
           </FormItem>
 
           <FormItem class="mg-submit">
@@ -34,7 +41,8 @@ export default {
     return {
       formValidate: {
         account: '',
-        pwd: ''
+        pwd: '',
+        type: '2'
       },
       ruleValidate: {
         account: [
@@ -42,6 +50,9 @@ export default {
         ],
         pwd: [
           { required: true, message: '请输入密码', trigger: 'blur' }
+        ],
+        type: [
+          { required: true, message: '请选择登录类型', trigger: 'blur' }
         ]
       }
     }
@@ -52,13 +63,17 @@ export default {
       me.$refs[name].validate((valid) => {
         if (valid) {
           AdiminLogin({
-            name: me.formValidate.name,
-            pwd: me.formValidate.pwd
+            name: me.formValidate.account,
+            pwd: me.formValidate.pwd,
+            type: me.formValidate.type
           }).then((res) => {
             if(res && res.ok) {
               me.$Message.success('登录成功!');
+              setTimeout(() => {
+                me.$router.push({name: 'home'})
+              })
             } else {
-              me.$Message.success('登录失败!');
+              me.$Message.error(res.errorMsg);
             }
           })
 
@@ -72,13 +87,13 @@ export default {
 </script>
 <style lang="less" scoped>
 .mg-login {
-  background: #2DB7F5;
+  background: #3d3744;
   width: 100%;
   height: 100%;
   .mg-login-area {
     background: #fff;
     width: 400px;
-    height: 300px;
+    height: 400px;
     position: relative;
     margin-left: -200px;
     left: 50%;

@@ -1,10 +1,10 @@
 <template>
   <div class="mg-import">
-  	 <Divider orientation="left">批量导入 账号列表</Divider>
+  	 <Divider orientation="left">批量导入 商品列表</Divider>
   	 <div class="tips">
   	 	 <p>1. 导入文件必须使用xlsx 文件</p>
        <p>2. 默认sheet1放置登录信息</p>
-       <p>3. 登录信息依次为 账户名称，真实姓名， 初始密码</p>
+       <p>3. 登录信息依次为商品简称，商品全称，商品类别简称，商品类别全称， 库存，价格，商品描述，商品图片</p>
   	 </div>
 
      <div style="margin-top: 20px;">
@@ -17,7 +17,7 @@
           :on-success="uploadCb">
           <div style="padding: 20px 0">
               <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
-              <p>导入账号列表</p>
+              <p>导入商品列表</p>
           </div>
       </Upload>
      </div>
@@ -29,16 +29,16 @@
 
 import config from '@src/config'
 import Cookies from 'js-cookie'
-import { AdminListRegister } from '@src/service/account'
+import { ProductListRegister } from '@src/service/product'
 
 export default {
-  name: 'AccountImport',
+  name: 'PooductImport',
   mounted() {
-    console.log('This is AccountImport')
+    console.log('This is PooductImport')
   },
   computed: {
     uploadUrl() {
-      return AdminListRegister
+      return ProductListRegister
     },
     headers() {
       return {
@@ -63,7 +63,7 @@ export default {
               }
             })
           } else {
-            me.$router.push({name: 'account_list'})
+            me.$router.push({name: 'product_list'})
           }
         }, 1000)
       }

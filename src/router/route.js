@@ -30,6 +30,53 @@ const routes = [
         path: 'account_import',
         name: 'account_import',
         component: () => import('@src/pages/account/import')
+      },
+      {
+        path: 'product_import',
+        name: 'product_import',
+        component: () => import('@src/pages/product/import')
+      },
+       {
+        path: 'product_list',
+        name: 'product_list',
+        component: () => import('@src/pages/product/list')
+      }
+    ]
+  },
+  {
+    path: '/home',
+    name: 'home',
+    component: Home,
+    children: [
+      {
+        path: 'association_list',
+        name: 'association_list',
+        component: () => import('@src/pages/association/list')
+      },
+      {
+        path: 'association_detail/',
+        name: 'association_detail',
+        component: () => import('@src/pages/association/detail')
+      },
+      {
+        path: 'association_account/',
+        name: 'association_account',
+        component: () => import('@src/pages/association/association-account')
+      },
+      {
+        path: 'association_business/',
+        name: 'association_business',
+        component: () => import('@src/pages/association/association-business')
+      },
+      {
+        path: 'association_order/',
+        name: 'association_order',
+        component: () => import('@src/pages/association/association-order')
+      },
+      {
+        path: 'association_staff/',
+        name: 'association_staff',
+        component: () => import('@src/pages/association/staff')
       }
     ]
   },
