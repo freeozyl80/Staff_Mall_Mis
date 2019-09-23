@@ -28,7 +28,8 @@ axios.interceptors.response.use(function (response) {
   } else if(response.data.errorCode == '400' || response.data.errorCode == 400) {
     return {
       errorCode: 400,
-      errorMsg: response.data.errorMsg + ':' + response.data.info,
+      errorMsg: response.data.errorMsg,
+      info: response.data.info,
       ok: false,
       data: {}
     }

@@ -47,7 +47,8 @@ export default {
         {
           title: '操作',
           key: 'action',
-          slot: 'action'
+          slot: 'action',
+          width: 400
         }
       ],
       listData: [

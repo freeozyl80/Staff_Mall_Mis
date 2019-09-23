@@ -3,7 +3,8 @@
     
 
   <Divider orientation="left">{{$route.query.firmname}}: 商品列表</Divider>
-  <Button type="primary" style="margin:30px 0 30px;" @click="importStaff()">+ 导入商品列表</Button>
+  <Button type="primary" style="margin:30px 0 30px;" @click="importProduct()">+ 导入商品列表</Button>&nbsp;&nbsp;
+  <Button type="default" style="margin:30px 0 30px;" @click="createProduct()">+ 新建单个商品</Button>
 
    <Table :columns="columns" :data="listData">
 
@@ -88,20 +89,25 @@ export default {
   },
 
   watch: {
-    '$route': 'fetch'
+    '$route' (to, from) {
+      let me = this;
+      if(to == 'association_business') {
+        me.fetch()
+      }
+    }
   },
   mounted() {
     let me = this;
     me.fetch()
   },
   methods: {
-    importStaff() {
+    importProduct() {
       this.$router.push({ name: 'product_import', query: { fid: this.$route.query.fid, firmname: this.$route.query.firmname, from: this.$route.name }})
     },
     fetch() {
       let me = this;
       firmProductList({
-        auth1: me.$route.query.fid,
+        fid: me.$route.query.fid,
         pageIndex: 1,
         pageSize: 10
       }).then((res) => {
@@ -112,9 +118,22 @@ export default {
         }
       })
     },
-    manage() {
+    manage(row) {
       let me = this;
-      console.log('这里是管理商品相关的逻辑')
+      me.$router.push({ name: 'association_business_detail', query: {
+       fid: me.$route.query.fid,
+       firmname: me.$route.query.firmname,
+       pid: row.pid,
+       mode: 'edit'
+     }})
+    },
+    createProduct() {
+      let me = this;
+      me.$router.push({ name: 'association_business_detail', query: {
+       fid: me.$route.query.fid,
+       firmname: me.$route.query.firmname,
+       mode: 'new'
+     }})
     }
   }
 }

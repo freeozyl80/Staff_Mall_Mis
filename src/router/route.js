@@ -68,6 +68,11 @@ const routes = [
         name: 'association_business',
         component: () => import('@src/pages/association/association-business')
       },
+       {
+        path: 'association_business_detail/',
+        name: 'association_business_detail',
+        component: () => import('@src/pages/association/association-business-detail')
+      },
       {
         path: 'association_order/',
         name: 'association_order',

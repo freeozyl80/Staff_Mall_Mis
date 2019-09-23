@@ -11,7 +11,7 @@
 
       <Form ref="formData" :model="formData" :rules="rules" :label-width="100" width="400">
 
-        <FormItem label="更新福利点数" prop="coin">
+        <FormItem label="增加福利点数" prop="coin">
           <Input v-model="formData.coin" placeholder="输入coin" number></Input>
         </FormItem>
 
@@ -59,7 +59,12 @@ export default {
     console.log('This is staffDetail')
   },
   watch: {
-    '$route': 'fetch'
+    '$route' (to, from) {
+      let me = this;
+      if(to == 'association_staff') {
+        me.fetch()
+      }
+    }
   },
   mounted() {
     let me = this;
@@ -91,6 +96,9 @@ export default {
             if(res.errorCode == 0) {
                me.$Message.success('员工福利点数操作成功:');
                me.fetch()
+            } else {
+              console.log(res)
+              me.$Message.error(res.errorMsg + ":" + res.info);
             }
           }, () => {
             me.$Message.error('员工福利点数操作失败');
