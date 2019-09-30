@@ -6,22 +6,22 @@
               <Icon type="ios-people" />
               <span>账户管理</span>
           </MenuItem>
-           <MenuItem name="product_list"  v-if="userType == '1'">
+          <!--  <MenuItem name="product_list"  v-if="userType == '1'">
               <Icon type="ios-construct" />
               <span>商品管理</span>
-          </MenuItem>
+          </MenuItem> -->
           <MenuItem name="association_list"  v-if="userType == '1'">
               <Icon type="ios-construct" />
               <span>合作机构管理</span>
           </MenuItem>
-           <MenuItem name="association_list" v-if="userType == '1'">
+           <!-- <MenuItem name="association_list" v-if="userType == '1'">
               <Icon type="ios-construct" />
               <span>订单列表</span>
           </MenuItem>
            <MenuItem name="association_list" v-if="userType == '2'">
               <Icon type="ios-construct" />
               <span>所属机构管理</span>
-          </MenuItem>
+          </MenuItem> -->
       </Menu>
 
       <Dropdown class="mg-home-drop" @on-click="accountOperate" trigger="click">
@@ -37,9 +37,7 @@
       </Dropdown>
     </div>
 
-    <keep-alive>
-      <router-view ref="child"/>
-    </keep-alive>
+    <router-view ref="child"/>
 
   </div>
 </template>

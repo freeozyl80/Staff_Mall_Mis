@@ -113,6 +113,11 @@ export const firmProductCreate = (params) => {
   bodyFormData.set('category_id', params.categoryId);
   bodyFormData.set('category_name', params.categoryName);
   bodyFormData.set('category_realname', params.categoryRealname);
+
+  bodyFormData.set('supplier_id', params.supplierId);
+  bodyFormData.set('supplier_name', params.supplierName);
+  bodyFormData.set('supplier_realname', params.supplierRealname);
+  
   bodyFormData.set('product_price', params.productPrice);
   bodyFormData.set('product_count', params.productCount);
   bodyFormData.set('product_img', params.productImg);
@@ -140,6 +145,11 @@ export const firmProductEdit = (params) => {
   bodyFormData.set('category_id', params.categoryId);
   bodyFormData.set('category_name', params.categoryName);
   bodyFormData.set('category_realname', params.categoryRealname);
+
+  bodyFormData.set('supplier_id', params.supplierId);
+  bodyFormData.set('supplier_name', params.supplierName);
+  bodyFormData.set('supplier_realname', params.supplierRealname);
+
   bodyFormData.set('product_price', params.productPrice);
   bodyFormData.set('product_count', params.productCount);
   bodyFormData.set('product_img', params.productImg);
@@ -172,6 +182,18 @@ export const firmProductCategoryList = ({fid}) => {
   })
 }
 
+export const supplierList = () => {
+  let url = apiHost + '/manage/supplier/list'
+
+  return axios.request({
+    url: url,
+    method: 'get',
+    params: {
+      page_index: 1,
+      page_size: 100
+    }
+  })
+}
 
 
 // 新增结束

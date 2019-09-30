@@ -77,6 +77,14 @@ export default {
           slot: 'product_status'
         },
         {
+          title: '供应商简称',
+          key: 'supplier_name'
+        },
+        {
+          title: '供应商名称',
+          key: 'supplier_realname'
+        },
+        {
           title: '操作',
           key: 'action',
           slot: 'action'

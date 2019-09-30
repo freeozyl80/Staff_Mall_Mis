@@ -16,6 +16,11 @@ const routes = [
     name: 'home',
     component: Home,
     children: [
+       {
+        path: 'welcome',
+        name: 'welcome',
+        component: () => import('@src/pages/welcome')
+      },
       {
         path: 'account_list',
         name: 'account_list',

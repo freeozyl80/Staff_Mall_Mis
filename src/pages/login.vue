@@ -70,7 +70,7 @@ export default {
             if(res && res.ok) {
               me.$Message.success('登录成功!');
               setTimeout(() => {
-                me.$router.push({name: 'home'})
+                me.$router.push({name: 'welcome'})
               })
             } else {
               me.$Message.error(res.errorMsg);

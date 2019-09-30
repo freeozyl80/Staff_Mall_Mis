@@ -1,9 +1,9 @@
 <template>
   <div class="mg-list">
     <Divider orientation="left">所有账户列表</Divider>
-    <div style="text-align: left;">
+    <!-- <div style="text-align: left;">
      <Button type="primary" style="margin:30px 0 30px;" @click="importAccout()">+ 批量导入账户</Button>
-    </div>
+    </div> -->
      <Table :columns="columns1" :data="listData">
        <template slot-scope="{ row }" slot="usertype">
          <p v-if="row.usertype == 1">系统管理员</p>
@@ -12,11 +12,11 @@
         </template>
 
        <template slot-scope="{ row, index }" slot="action">
-        <div v-if="row.usertype != 1">
+        <!-- <div v-if="row.usertype != 1">
           <Button class="mg-button" type="warning" size="small" style="margin-right: 5px" @click="rest(index)">重置</Button>
           <Button class="mg-button" type="error" size="small" @click="remove(index)">删除</Button>
           <Button class="mg-button" type="primary" size="small" @click="detail(row.id)">详情</Button>
-        </div>
+        </div> -->
          
         </template>
      </Table>

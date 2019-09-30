@@ -43,6 +43,12 @@
           <Input v-model="formData.productDesc" placeholder="输入商品描述"></Input>
         </FormItem>
 
+        <FormItem label="供应商名称" prop="supplierId">
+            <Select v-model="formData.supplierId" @on-change="confimSupplier" :disabled="isEdit">
+                 <Option v-for="(item, idx) in supplierOptions" :key="idx" :value="item.supplier_id">{{item.supplier_name}} ({{item.supplier_realname}})</Option>
+            </Select>
+        </FormItem>
+
         <FormItem>
           <Button type="primary" @click="handleSubmit('formData')"  v-if="isEdit">修改商品</Button>
           <Button type="primary" @click="handleSubmit('formData')"  v-if="!isEdit">新建商品</Button>
@@ -57,7 +63,7 @@
 <script>
 import {firmProductEdit} from '@src/service/firm.js'
 import {firmProductCreate} from '@src/service/firm.js'
-import {firmProductCategoryList} from '@src/service/firm.js'
+import {firmProductCategoryList, supplierList} from '@src/service/firm.js'
 import {firmProductDetail} from '@src/service/firm.js'
 
 
@@ -92,6 +98,9 @@ export default {
         categoryId: null,
         categoryName: '',
         categoryRealname: '',
+        supplierId: null,
+        supplierName: '',
+        supplierRealname: '',
         productPrice: 0,
         productCount: 0,
         productImg: '',
@@ -107,6 +116,9 @@ export default {
         ],
         categoryId: [
           { required: true, type: 'number', message: '请选择商品类别', trigger: 'blur' },
+        ],
+        supplierId: [
+          { required: true, type: 'number', message: '请选择供应商', trigger: 'blur' },
         ],
         productPrice: [
           { required: true,  type: 'number', message: '商品价格不能为空', trigger: 'blur', transform(value) {
@@ -129,7 +141,9 @@ export default {
         ]
       },
       categoryOptions: [],
+      supplierOptions: [],
       categoryData: {},
+      SupplierData: {},
       productStatusOptions: [
         {
           id: 1,
@@ -145,7 +159,7 @@ export default {
   watch: {
     '$route' (to, from) {
       let me = this;
-      if(to == 'association_business_detail') {
+      if(to.name == 'association_business_detail') {
         me.fetch()
       }
     }
@@ -176,7 +190,8 @@ export default {
             if(res.errorCode == 0) {
                me.$Message.success('商品操作成功');
                setTimeout(() => {
-                me.$router.push({ name: 'association_business'}, {
+                me.$router.push({ 
+                  name: 'association_business',
                   query: {
                     fid: me.$route.query.fid,
                     firmname: me.$route.query.firmname
@@ -212,6 +227,22 @@ export default {
         me.$Message.error('商品列表拉取失败');
       })
 
+      supplierList().then((res) => {
+        if(res.errorCode == 0) {
+          me.supplierOptions = res.data.list || []
+          res.data.list.map((item) => {
+            me.SupplierData[item.supplier_id] = {
+              supplierName: item.supplier_name,
+              supplierRealname: item.supplier_realname
+            }
+          })
+        } else {
+          me.$Message.error(res.errorMsg + ":" + res.info);
+        }
+      }, () => {
+        me.$Message.error('供应商列表拉取失败');
+      })
+
       if (me.isEdit) {
         firmProductDetail({
           fid: me.$route.query.fid,
@@ -235,6 +266,10 @@ export default {
       let me = this;
       me.formData.categoryName = me.categoryData[val].categoryName
       me.formData.categoryRealname = me.categoryData[val].categoryRealname
+    },
+    confimSupplier(val) {
+      me.formData.supplierName = me.categoryData[val].supplierName
+      me.formData.supplierRealname = me.categoryData[val].supplierRealname
     }
   }
 }
