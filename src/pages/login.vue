@@ -73,7 +73,8 @@ export default {
                 me.$router.push({name: 'welcome'})
               })
             } else {
-              me.$Message.error(res.errorMsg);
+              console.log(res)
+              me.$Message.error(res.errorMsg + ':' + res.info);
             }
           })
 

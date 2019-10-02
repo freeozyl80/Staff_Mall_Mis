@@ -1,6 +1,6 @@
 module.exports =  {
-  apiHost: '//127.0.0.1:8888',
-  appName: 'manage',
+  apiHost: '',
+  appName: 'web',
   loginOpts: {
   	cookieKey: 'hualvmall_authorization'
   }

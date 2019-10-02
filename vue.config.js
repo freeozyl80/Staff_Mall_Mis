@@ -27,7 +27,7 @@ module.exports = {
     entry: './src/main.js',
     devtool:process.env.NODE_ENV == 'production' ? 'none' : '#eval-source-map'
   },
-  outputDir: './web',
+  outputDir: process.env.NODE_ENV == 'production' ? '/Users/zhangyunlu/code/go/projects/src/staff-mall-center/www' : './web',
   devServer: {
     inline: true,
     host: 'localhost',
