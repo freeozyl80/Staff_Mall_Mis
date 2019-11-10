@@ -268,6 +268,7 @@ export default {
       me.formData.categoryRealname = me.categoryData[val].categoryRealname
     },
     confimSupplier(val) {
+      let me = this;
       me.formData.supplierName = me.categoryData[val].supplierName
       me.formData.supplierRealname = me.categoryData[val].supplierRealname
     }

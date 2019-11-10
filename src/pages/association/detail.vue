@@ -8,11 +8,11 @@
 	    <Form ref="formData" :model="formData" :rules="rules" :label-width="80">
 
 	      <FormItem label="机构简称（英文）" prop="firmName">
-	        <Input v-model="formData.firmName" placeholder="输入firmName"></Input>
+	        <Input v-model="formData.firmName" placeholder="输入firmName" :disabled="isEdit"></Input>
 	      </FormItem>
 
 	      <FormItem label="机构全称" prop="firmRealName">
-	        <Input v-model="formData.firmRealName" placeholder="输入机构全称"></Input>
+	        <Input v-model="formData.firmRealName" placeholder="输入机构全称" :disabled="isEdit"></Input>
 	      </FormItem>
 
            <FormItem label="机构金额" prop="balance">
@@ -20,7 +20,8 @@
         </FormItem>
 
 	      <FormItem>
-	        <Button type="primary" @click="handleSubmit('formData')">新建合作机构</Button>
+          <Button v-if="!isEdit" type="primary" @click="handleSubmit('formData', 1)">新建合作机构</Button>
+          <Button v-if="isEdit" type="primary" @click="handleSubmit('formData', 2)">更新合作机构</Button>
 	      </FormItem>
 
 	    </Form>
@@ -30,7 +31,7 @@
 </template>
 
 <script>
-import {firmAdd} from '@src/service/firm.js'
+import {firmAdd, firmInfo, firmUpdate} from '@src/service/firm.js'
 
 export default {
   name: 'AssociationDetail',
@@ -57,26 +58,47 @@ export default {
     }
   },
   mounted() {
-    console.log('This is AssociationDetail')
+    let me = this;
+    me.fetchData()
   },
   methods: {
-    handleSubmit(name) {
+    fetchData() {
+      let me = this;
+      if (me.isEdit) {
+        firmInfo({
+          fid: me.$route.query.fid
+        }).then((res) => {
+          if(res.errorCode == 0) {
+             me.formData['firmName'] = res.data.info.firm_name
+             me.formData['firmRealName'] = res.data.info.firm_realname
+             me.formData['balance'] = res.data.info.balance
+          } else {
+            me.$Message.error('机构查询失败');
+          }
+        }, () => {
+            me.$Message.error('机构查询失败');
+        })
+      }
+    },
+    handleSubmit(name, type) {
       let me = this;
       this.$refs[name].validate((valid) => {
         if (valid) {
-          firmAdd({
+          let fun = type == 1 ? firmAdd : firmUpdate;
+          fun({
+            fid: me.$route.query.fid,
             firmName: me.formData.firmName,
             firmRealName: me.formData.firmRealName,
             balance: me.formData.balance
           }).then ((res) => {
             if(res.errorCode == 0) {
-               me.$Message.success('机构注册成功:' + res.data.firmname + '(' + res.data.firm_realname  +')');
+               me.$Message.success('机构更新成功:' + res.data.firmname + '(' + res.data.firm_realname  +')');
                setTimeout(() => {
                 me.$router.push({ name: 'association_list'})
                }, 2000)
             }
           }, () => {
-            me.$Message.error('机构注册失败');
+            me.$Message.error('机构更新失败');
           })
         } else {
           me.$Message.error('请检查填写');

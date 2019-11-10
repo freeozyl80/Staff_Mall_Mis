@@ -1,6 +1,18 @@
 import axios from './axios'
 import { apiHost } from '@src/config'
 
+export const firmInfo = ({fid}) => {
+  let url = apiHost + '/manage/firm/detail'
+
+  return axios.request({
+    url: url,
+    method: 'get',
+    params: {
+      fid: fid,
+    }
+  })
+}
+
 export const firmList = ({pageIndex, pageSize}) => {
   let url = apiHost + '/manage/firm/list'
 
@@ -31,6 +43,27 @@ export const firmAdd = (params) => {
     data: bodyFormData
   })
 }
+export const firmUpdate = (params) => {
+  let url = apiHost + '/manage/firm/update'
+
+  let bodyFormData = new FormData();
+  bodyFormData.set('firmname', params.firmName);
+  bodyFormData.set('firm_realname', params.firmRealName);
+  bodyFormData.set('balance', params.balance);
+
+  return axios.request({
+    url: url,
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/form-data'
+    },
+    data: bodyFormData,
+    params: {
+      fid: params.fid
+    }
+  })
+}
+
 
 
 export const firmLsit = ({pageIndex, pageSize}) => {

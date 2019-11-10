@@ -2,7 +2,7 @@
   <div class="mg-list">
     <Divider orientation="left">所有机构列表</Divider>
     <div style="text-align: left;">
-     <Button type="primary" style="margin:30px 0 30px;" @click="importAssociation()">+ 新建合作机构</Button>
+     <Button v-if="isSuperManager" type="primary" style="margin:30px 0 30px;" @click="importAssociation()">+ 新建合作机构</Button>
     </div>
      <Table :columns="columns1" :data="listData">
 
@@ -10,6 +10,7 @@
           <Button class="mg-button" type="default" size="small" style="margin-right: 5px" @click="account(row)">账号管理</Button>
           <Button class="mg-button" type="primary" size="small" @click="busin(row)">商品管理</Button>
           <Button class="mg-button" type="info" size="small" @click="order(row)">订单管理</Button>
+          <Button v-if="isSuperManager" class="mg-button" type="dashed" size="small" @click="association(row)">公司管理</Button>
         </template>
      </Table>
   </div>
@@ -56,7 +57,17 @@ export default {
     }
   },
   watch: {
-    '$route': 'fetch'
+    '$route' (to, from) {
+      let me = this;
+      if(to == 'association_detail') {
+        me.fetch()
+      }
+    }
+  },
+  computed: {
+    isSuperManager () {
+      return this.$store.state.user.userType === '1'
+    }
   },
   methods: {
     detail(id) {
@@ -68,7 +79,6 @@ export default {
         pageIndex: 1,
         pageSize: 10
       }).then((res)=>{
-        console.log(res)
         if(res.errorCode == 0) {
           me.listData = res.data.list || []
         } else {
@@ -103,6 +113,16 @@ export default {
         }
       })
     },
+    association(item) {
+      let me = this;
+      me.$router.push({ 
+        name: 'association_detail',
+        query: {
+          fid: item.fid,
+          firmname: item.firmname
+        }
+      })
+    },
     order(item) {
       let me = this;
       me.$router.push({ 
@@ -113,7 +133,7 @@ export default {
         }
       })
     }
-  }
+  },
 }
 </script>
 <style lang="less" scoped>
