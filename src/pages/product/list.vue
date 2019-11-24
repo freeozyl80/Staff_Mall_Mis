@@ -3,12 +3,12 @@
     
 
   <Divider orientation="left">所有商品列表</Divider>
-  <Button type="primary" style="margin:30px 0 30px;" @click="importStaff()">+ 导入商品列表</Button>
+  <Button type="primary" style="margin:30px 0 30px;" @click="importProduct()">+ 导入商品列表</Button>
 
    <Table :columns="columns" :data="listData">
 
     <template slot-scope="{ row, index }" slot="product_img">
-      <img style="width: 300px;object-fit: contain":src="row.product_img"/>
+      <img style="width: 100px;object-fit: contain":src="row.product_img"/>
     </template>
 
     <template slot-scope="{ row, index }" slot="product_status">
@@ -69,7 +69,8 @@ export default {
         {
           title: '商品图片',
           key: 'product_img',
-          slot: 'product_img'
+          slot: 'product_img',
+          width: 100,
         },
         {
           title: '商品状态',
@@ -103,7 +104,7 @@ export default {
     me.fetch()
   },
   methods: {
-    importStaff() {
+    importProduct() {
       this.$router.push({ name: 'product_import'})
     },
     fetch() {

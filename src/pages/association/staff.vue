@@ -1,11 +1,19 @@
 <template>
   <div class="mg-staff">
 
-    <Divider orientation="left">机构{{$route.query.firmname}}：员工操作页面</Divider>
-      <div class="staff-info">
-        <div>staff 姓名: <span>{{staffInfo.username}}</span></div>
-        <div>剩余福利点数: <span>{{staffInfo.coi}}</span></div>
-      </div>
+    <Breadcrumb>
+      <BreadcrumbItem to="/home">首页</BreadcrumbItem>
+      <BreadcrumbItem to="/home/association_list">合作机构列表</BreadcrumbItem>
+      <BreadcrumbItem :to="'/home/association_account?fid='+ $route.query.fid +'&firmname=' + $route.query.firmname">{{$route.query.firmname}}: 员工列表</BreadcrumbItem>
+      <BreadcrumbItem>机构{{$route.query.firmname}}：员工操作页面</BreadcrumbItem>
+    </Breadcrumb> 
+
+    <br/>
+    
+    <div class="staff-info">
+      <div>staff 姓名: <span>{{staffInfo.username}}</span></div>
+      <div>剩余福利点数: <span>{{staffInfo.coi}}</span></div>
+    </div>
     <div style="max-width: 500px; text-align: left">
     </div>
 
@@ -86,25 +94,36 @@ export default {
     },
     handleSubmit(name) {
       let me = this;
-      this.$refs[name].validate((valid) => {
-        if (valid) {
-          deliverStaffCoin({
-            fid: me.$route.query.fid,
-            uid: me.$route.query.uid,
-            coin: me.formData.coin
-          }).then ((res) => {
-            if(res.errorCode == 0) {
-               me.$Message.success('员工福利点数操作成功:');
-               me.fetch()
+       this.$Modal.confirm({
+        render: (createElement) => {
+          var self = this;
+          return createElement('div', [
+              createElement('h2', '确认操作'),
+              createElement('h4', `确认添加员工福利点数${me.formData.coin}?`)
+          ]);
+        },
+        onOk() {
+          this.$refs[name].validate((valid) => {
+            if (valid) {
+              deliverStaffCoin({
+                fid: me.$route.query.fid,
+                uid: me.$route.query.uid,
+                coin: me.formData.coin
+              }).then ((res) => {
+                if(res.errorCode == 0) {
+                   me.$Message.success('员工福利点数操作成功:');
+                   me.fetch()
+                } else {
+                  console.log(res)
+                  me.$Message.error(res.errorMsg + ":" + res.info);
+                }
+              }, () => {
+                me.$Message.error('员工福利点数操作失败');
+              })
             } else {
-              console.log(res)
-              me.$Message.error(res.errorMsg + ":" + res.info);
+              me.$Message.error('请检查填写');
             }
-          }, () => {
-            me.$Message.error('员工福利点数操作失败');
           })
-        } else {
-          me.$Message.error('请检查填写');
         }
       })
     }

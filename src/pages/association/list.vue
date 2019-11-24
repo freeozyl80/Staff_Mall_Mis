@@ -1,6 +1,12 @@
 <template>
   <div class="mg-list">
-    <Divider orientation="left">所有机构列表</Divider>
+
+  <Breadcrumb>
+    <BreadcrumbItem to="/home">首页</BreadcrumbItem>
+    <BreadcrumbItem>所有机构列表</BreadcrumbItem>
+  </Breadcrumb> 
+
+
     <div style="text-align: left;">
      <Button v-if="isSuperManager" type="primary" style="margin:30px 0 30px;" @click="importAssociation()">+ 新建合作机构</Button>
     </div>
@@ -138,6 +144,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .mg-list {
+  text-align: left;
   padding: 40px;
   .mg-button {
     margin: 0 12px;

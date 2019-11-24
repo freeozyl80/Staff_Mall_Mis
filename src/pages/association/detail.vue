@@ -1,9 +1,13 @@
 <template>
   <div class="mg-detail">
 
-    <Divider orientation="left" v-if="!isEdit">新建 合作机构</Divider>
-    <Divider orientation="left" v-if="isEdit">编辑 合作机构</Divider>
-
+     <Breadcrumb>
+      <BreadcrumbItem to="/home">首页</BreadcrumbItem>
+      <BreadcrumbItem to="/home/association_list">合作机构列表</BreadcrumbItem>
+      <BreadcrumbItem  v-if="!isEdit">新建 合作机构</BreadcrumbItem>
+      <BreadcrumbItem  v-if="isEdit">编辑 合作机构</BreadcrumbItem>
+    </Breadcrumb>
+    <br/>
     <div style="max-width: 500px; text-align: left">
 	    <Form ref="formData" :model="formData" :rules="rules" :label-width="80">
 
@@ -110,6 +114,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .mg-detail{
+  text-align: left;
   padding: 40px;
 }
 </style>

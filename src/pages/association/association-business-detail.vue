@@ -1,8 +1,14 @@
 <template>
   <div class="mg-detail">
 
-    <Divider orientation="left" v-if="!isEdit">新增 商品</Divider>
-    <Divider orientation="left" v-if="isEdit">编辑 商品</Divider>
+    <Breadcrumb>
+      <BreadcrumbItem to="/home">首页</BreadcrumbItem>
+      <BreadcrumbItem  to="/home/association_list">合作机构列表</BreadcrumbItem>
+      <BreadcrumbItem  :to="'/home/association_business?fid='+ $route.query.fid +'&firmname=' + $route.query.firmname">{{$route.query.firmname}}: 商品列表</BreadcrumbItem>
+      <BreadcrumbItem  v-if="!isEdit">新增 商品</BreadcrumbItem>
+      <BreadcrumbItem v-if="isEdit">编辑 商品入</BreadcrumbItem>
+    </Breadcrumb> 
+     <br/>
 
     <div style="max-width: 500px; text-align: left">
       <Form ref="formData" :model="formData" :rules="rules" :label-width="80">
@@ -178,32 +184,43 @@ export default {
       } else {
         fun = firmProductCreate
       }
-      this.$refs[name].validate((valid) => {
-        if (valid) {
-          let formData = Object.assign({}, me.formData, me.isEdit ? {
-            fid: me.$route.query.fid,
-            pid: me.$route.query.pid
-          }: {
-            fid: me.$route.query.fid
-          })
-          fun(formData).then ((res) => {
-            if(res.errorCode == 0) {
-               me.$Message.success('商品操作成功');
-               setTimeout(() => {
-                me.$router.push({ 
-                  name: 'association_business',
-                  query: {
-                    fid: me.$route.query.fid,
-                    firmname: me.$route.query.firmname
-                  }
-                })
-               }, 2000)
+      this.$Modal.confirm({
+        render: (createElement) => {
+          var self = this;
+          return createElement('div', [
+              createElement('h2', '确认操作'),
+              createElement('h4', `商品操作确认？`)
+          ]);
+        },
+        onOk() {
+          this.$refs[name].validate((valid) => {
+            if (valid) {
+              let formData = Object.assign({}, me.formData, me.isEdit ? {
+                fid: me.$route.query.fid,
+                pid: me.$route.query.pid
+              }: {
+                fid: me.$route.query.fid
+              })
+              fun(formData).then ((res) => {
+                if(res.errorCode == 0) {
+                   me.$Message.success('商品操作成功');
+                   setTimeout(() => {
+                    me.$router.push({ 
+                      name: 'association_business',
+                      query: {
+                        fid: me.$route.query.fid,
+                        firmname: me.$route.query.firmname
+                      }
+                    })
+                   }, 2000)
+                }
+              }, () => {
+                me.$Message.error('商品操作失败');
+              })
+            } else {
+              me.$Message.error('请检查填写');
             }
-          }, () => {
-            me.$Message.error('商品操作失败');
           })
-        } else {
-          me.$Message.error('请检查填写');
         }
       })
     },
@@ -278,5 +295,6 @@ export default {
 <style lang="less" scoped>
 .mg-detail{
   padding: 40px;
+  text-align: left;
 }
 </style>

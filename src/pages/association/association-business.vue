@@ -1,15 +1,20 @@
 <template>
   <div class="mg-detail">
-    
+  
+  <Breadcrumb>
+    <BreadcrumbItem to="/home">首页</BreadcrumbItem>
+    <BreadcrumbItem to="/home/association_list">合作机构列表</BreadcrumbItem>
+    <BreadcrumbItem>{{$route.query.firmname}}: 商品列表</BreadcrumbItem>
+  </Breadcrumb> 
+  <br/>
 
-  <Divider orientation="left">{{$route.query.firmname}}: 商品列表</Divider>
   <Button type="primary" style="margin:30px 0 30px;" @click="importProduct()">+ 导入商品列表</Button>&nbsp;&nbsp;
   <Button type="default" style="margin:30px 0 30px;" @click="createProduct()">+ 新建单个商品</Button>
 
    <Table :columns="columns" :data="listData">
 
     <template slot-scope="{ row, index }" slot="product_img">
-      <img style="width: 300px;object-fit: contain":src="row.product_img"/>
+      <img style="width: 100px;object-fit: contain":src="row.product_img"/>
     </template>
 
     <template slot-scope="{ row, index }" slot="product_status">
@@ -22,6 +27,9 @@
     </template>
    </Table>
 
+    <template>
+        <Page :total="total" show-sizer=false :page-size="pageData.pageSize" :current="pageData.pageIndex" @on-change="jump"/>
+    </template>
   </div>
 </template>
 
@@ -34,6 +42,11 @@ export default {
   name: 'AssociationProduct',
   data() {
     return {
+      total: 0,
+      pageData: {
+        pageSize: 10,
+        pageIndex: 1
+      },
       columns: [
         {
           title: '商品id',
@@ -70,7 +83,8 @@ export default {
         {
           title: '商品图片',
           key: 'product_img',
-          slot: 'product_img'
+          slot: 'product_img',
+          width: 100,
         },
         {
           title: '商品状态',
@@ -104,15 +118,21 @@ export default {
     importProduct() {
       this.$router.push({ name: 'product_import', query: { fid: this.$route.query.fid, firmname: this.$route.query.firmname, from: this.$route.name }})
     },
-    fetch() {
+    jump(num) {
+      let me = this
+      me.pageData.pageIndex = num
+      me.fetch(me.pageData.pageIndex, me.pageData.pageSize)
+    },
+    fetch(index, size) {
       let me = this;
       firmProductList({
         fid: me.$route.query.fid,
-        pageIndex: 1,
-        pageSize: 10
+        pageIndex: index || me.pageData.pageIndex,
+        pageSize: size || me.pageData.pageSize
       }).then((res) => {
         if(res.ok) {
           me.listData = res.data.list || []
+          me.total = res.data.total
         } else {
           me.$Message.error(res.errorMsg + ":" + res.info);
         }

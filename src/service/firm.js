@@ -308,7 +308,23 @@ export const cancelOrder = ({fid, orderId}) => {
 
   return axios.request({
     url: url,
-    method: 'get',
+    method: 'post',
+    data: bodyFormData,
+    params: {
+      fid: fid
+    }
+  })
+}
+
+export const deliverOrder = ({fid, orderId}) => {
+  let url = apiHost + '/manage/order/deliver'
+
+  let bodyFormData = new FormData();
+  bodyFormData.set('orderId', orderId);
+
+  return axios.request({
+    url: url,
+    method: 'post',
     data: bodyFormData,
     params: {
       fid: fid

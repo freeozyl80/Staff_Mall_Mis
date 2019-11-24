@@ -1,10 +1,18 @@
 <template>
   <div class="mg-import">
-  	 <Divider orientation="left">批量导入 商品列表</Divider>
+    <Breadcrumb>
+      <BreadcrumbItem to="/home">首页</BreadcrumbItem>
+      <BreadcrumbItem v-if="$route.query.firmname" to="/home/association_list">合作机构列表</BreadcrumbItem>
+      <BreadcrumbItem v-if="$route.query.firmname" :to="'/home/association_business?fid='+ $route.query.fid +'&firmname=' + $route.query.firmname">{{$route.query.firmname}}: 商品列表</BreadcrumbItem>
+      <BreadcrumbItem v-if="$route.query.firmname">{{$route.query.firmname}}: 商品导入</BreadcrumbItem>
+    </Breadcrumb> 
+     <br/>
+
   	 <div class="tips">
   	 	 <p>1. 导入文件必须使用xlsx 文件</p>
        <p>2. 默认sheet1放置登录信息</p>
        <p>3. 登录信息依次为商品简称，商品全称，商品类别简称，商品类别全称， 库存，价格，商品描述，商品图片</p>
+       <a href="https://img.cdn.hualvmall.com/product.xlsx">查看示例excel文件</a>
   	 </div>
 
      <div style="margin-top: 20px;">
@@ -74,6 +82,7 @@ export default {
 <style lang="less" scoped>
 .mg-import {
   padding: 40px;
+  text-align: left;
 }
 .tips {
   color: #3d3d3d;

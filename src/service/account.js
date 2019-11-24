@@ -34,3 +34,18 @@ export const accountList = ({pageIndex, pageSize}) => {
     }
   })
 }
+
+export const accountRest = ({uid}) => {
+  let url = apiHost + '/manage/user/reset'
+
+  let bodyFormData = new FormData();
+  bodyFormData.set('uid', uid);
+  return axios.request({ 
+    url: url,
+    method: 'post',
+     headers: {
+      'Content-Type': 'application/form-data'
+    },
+    data: bodyFormData
+  })
+}

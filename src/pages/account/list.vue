@@ -20,6 +20,11 @@
          
         </template>
      </Table>
+
+     <template>
+        <Page :total="total" show-sizer=false :page-size="pageData.pageSize" :current="pageData.pageIndex" @on-change="jump"/>
+    </template>
+
   </div>
 </template>
 
@@ -35,6 +40,11 @@ export default {
   },
   data () {
     return {
+      total: 0,
+      pageData: {
+        pageSize: 10,
+        pageIndex: 1
+      },
       columns1: [
         {
           title: '用户id',
@@ -73,14 +83,20 @@ export default {
     importAccout() {
       this.$router.push({ name: 'account_import'})
     },
-    fetch() {
+    jump(num) {
+      let me = this
+      me.pageData.pageIndex = num
+      me.fetch(me.pageData.pageIndex, me.pageData.pageSize)
+    },
+    fetch(index, size) {
       let me = this;
       accountList({
-        pageIndex: 1,
-        pageSize: 10
+        pageIndex: index || me.pageData.pageIndex,
+        pageSize: size || me.pageData.pageSize
       }).then((res) => {
         if(res.ok) {
           me.listData = res.data.list
+          me.total = res.data.total
         } else {
           me.$Message.error(res.errorMsg + ":" + res.info);
         }
