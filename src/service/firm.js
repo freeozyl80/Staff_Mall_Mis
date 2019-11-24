@@ -242,6 +242,29 @@ export const getStaffInfo = ({uid, fid}) => {
   })
 }
 
+export const addStaff = (params) => {
+  let url = apiHost + `/manage/firm/staff/add`
+
+
+  let bodyFormData = new FormData();
+  bodyFormData.set('name', params.username);
+  bodyFormData.set('realname', params.userRealname);
+  bodyFormData.set('pwd', params.password);
+
+
+  return axios.request({
+    url: url,
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/form-data'
+    },
+    data: bodyFormData,
+    params: {
+      fid: params.fid,
+    }
+  })
+}
+
 export const deliverStaffCoin = ({uid, fid, coin}) => {
   let url = apiHost + `/manage/firm/staff/coin`
 

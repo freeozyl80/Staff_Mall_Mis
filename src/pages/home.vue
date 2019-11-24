@@ -38,7 +38,7 @@
     </div>
 
     <router-view ref="child"/>
-
+    
   </div>
 </template>
 

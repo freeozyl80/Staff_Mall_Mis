@@ -9,6 +9,8 @@
   
   <Button type="primary" style="margin:30px 0 30px;" @click="importStaff()">+ 导入员工列表</Button>
   </br>
+  <Button type="default" style="margin:30px 0 30px;" @click="addStaff()">+ 新增单个员工</Button>
+  </br>
 
   <Input v-model="coin" placeholder="福利点数值" style="width: 100px" />
    &nbsp;
@@ -144,9 +146,21 @@ export default {
       me.$router.push({ 
         name: 'association_staff',
         query: {
+          mode: 'edit',
           fid: me.$route.query.fid,
           firmname: me.$route.query.firmname,
           uid: item.uid
+        }
+      })
+    },
+    addStaff() {
+      let me = this;
+      me.$router.push({ 
+        name: 'association_staff',
+        query: {
+          mode: 'new',
+          fid: me.$route.query.fid,
+          firmname: me.$route.query.firmname
         }
       })
     },

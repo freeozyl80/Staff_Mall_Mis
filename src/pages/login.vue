@@ -27,10 +27,12 @@
         </Form>
 
     </div>
+    <Hfooter></Hfooter>
   </div>
 </template>
 
 <script>
+import Footer from '@src/components/footer.vue'
 import { AdiminLogin } from '@src/service/account'
 export default {
   name: 'Login',
@@ -56,6 +58,9 @@ export default {
         ]
       }
     }
+  },
+  components: {
+    'Hfooter': Footer
   },
   methods: {
     handleSubmit (name) {
