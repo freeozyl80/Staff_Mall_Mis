@@ -1,11 +1,19 @@
 <template>
   <div class="mg-detail">
-    
 
   <Divider orientation="left">所有商品列表</Divider>
+
+
+  <Select v-model="firmData" style="width:200px" @on-change="select">
+    <Option v-for="item in firmList" :value="item.fid" :key="item.fid">{{ item.firmname }}</Option>
+  </Select>
+  <Button type="primary" style="margin:30px 0 30px;" @click="addToFirm()">勾选后, 导入机构</Button>
+
+  <br/>
+
   <Button type="primary" style="margin:30px 0 30px;" @click="importProduct()">+ 导入商品列表</Button>
 
-   <Table :columns="columns" :data="listData">
+   <Table :columns="columns" :data="listData" ref="selection" @on-selection-change="choose">
 
     <template slot-scope="{ row, index }" slot="product_img">
       <img style="width: 100px;object-fit: contain":src="row.product_img"/>
@@ -21,11 +29,16 @@
     </template>
    </Table>
 
+    <template>
+        <Page :total="total" show-sizer=false :page-size="pageData.pageSize" :current="pageData.pageIndex" @on-change="jump"/>
+    </template>
   </div>
 </template>
 
 <script>
 
+
+import { firmList, firmInfo, firmUpdate } from '@src/service/firm'
 
 import { productList } from '@src/service/product'
 
@@ -33,7 +46,22 @@ export default {
   name: 'ProductList',
   data() {
     return {
+      total: 0,
+      pageData: {
+        pageSize: 10,
+        pageIndex: 1
+      },
+      firmData: '',
+      firmList: [],
+      firmDetail: {},
+      firmChoosePid: [],
+      firmChooseCid: [],
       columns: [
+        {
+          type: 'selection',
+          width: 60,
+          align: 'center'
+        },
         {
           title: '商品id',
           key: 'pid'
@@ -97,32 +125,149 @@ export default {
   },
 
   watch: {
-    '$route': 'fetch'
+    '$route': 'fetch',
+    'firmDetail': function() {
+      let me = this;
+      let productArr = me.firmDetail.product_group ? me.firmDetail.product_group.split(',') : []
+
+      me.listData.forEach((product) => {
+        product._disabled = false
+      })
+            
+      productArr.forEach((fproduct) => {
+        me.listData.forEach((product) => {
+          if(product.pid == fproduct) {
+            product._disabled = true
+          }
+        })
+      })
+    }
   },
   mounted() {
+    window.test = this;
     let me = this;
     me.fetch()
   },
   methods: {
     importProduct() {
-      this.$router.push({ name: 'product_import'})
+      this.$router.push({ 
+        name: 'product_import'
+      })
     },
-    fetch() {
+    jump(num) {
+      let me = this
+      me.pageData.pageIndex = num
+      me.fetch(me.pageData.pageIndex, me.pageData.pageSize)
+    },
+    fetch(index, size) {
       let me = this;
       productList({
-        pageIndex: 1,
-        pageSize: 10
+        pageIndex: index || me.pageData.pageIndex,
+        pageSize: size || me.pageData.pageSize
       }).then((res) => {
         if(res.ok) {
-          me.listData = res.data.list || []
+          me.total = res.data.total
+          let data = res.data.list || []
+          data.forEach((product) => {
+            product._disabled = false
+          })
+          me.listData = data
         } else {
           me.$Message.error(res.errorMsg + ":" + res.info);
         }
       })
+
+      firmList({
+        pageIndex: 1,
+        pageSize: 100
+      }).then((res)=>{
+        if(res.errorCode == 0) {
+          me.firmList = res.data.list || []
+        } else {
+          me.$Message.error(res.errorMsg + ":" + res.info);
+        }
+      }, (e) => {
+        me.$Message.error(e + ":" + res.info);
+      })
     },
-    manage() {
+    manage(row) {
       let me = this;
-      console.log('这里是管理商品相关的逻辑')
+      me.$router.push({ name: 'association_business_detail', query: {
+       pid: row.pid,
+       mode: 'edit'
+     }})
+    },
+    select(fid) {
+      let me = this;
+      firmInfo({
+        fid: fid
+      }).then((res) => {
+        if(res.errorCode == 0) {
+          me.firmDetail = res.data.info
+        } else {
+          me.$Message.error('机构查询失败');
+        }
+      }, () => {
+          me.$Message.error('机构查询失败');
+      })
+    },
+    choose(list) {
+      let me = this;
+      let pidList = list.map((ele) => {
+        return ele.pid
+      })
+
+      let cidList = list.map((ele) => {
+        return ele.cid
+      })
+
+      me.firmChoosePid = pidList
+      me.firmChooseCid = cidList
+    },
+    addToFirm() {
+      let me = this
+      if (!me.firmData) {
+        me.$Message.error('请选择机构');
+      }
+      if (me.firmChoosePid.length == 0) {
+        me.$Message.error('请勾选需要的商品');
+      }
+
+      let group = me.genGroup()
+
+      firmUpdate({
+        fid: me.firmData,
+        firmName: me.firmDetail.firm_name,
+        firmRealName: me.firmDetail.firm_realname,
+        balance: me.firmDetail.balance,
+        productGroup: group.productGroup,
+        categoryGroup: group.categoryGroup
+      }).then ((res) => {
+        if(res.errorCode == 0) {
+           me.$Message.success('机构更新成功:' + res.data.firmname + '(' + res.data.firm_realname  +')');
+           setTimeout(() => {
+            window.location.reload()
+           }, 2000)
+        }
+      }, () => {
+        me.$Message.error('机构更新失败');
+      })
+    },
+    genGroup() {
+      let me = this;
+      let res = {}
+      let pgroup = me.firmDetail.product_group ? (me.firmDetail.product_group + ',') : me.firmDetail.product_group
+      let cgroup = me.firmDetail.category_group ? me.firmDetail.category_group.split(',') : []
+
+      function unique (arr) {
+        return Array.from(new Set(arr))
+      }
+
+      res.productGroup = pgroup + me.firmChoosePid.join(',')
+
+      res.categoryGroup = unique(cgroup.concat(me.firmChooseCid)).join(',')
+
+      return res
     }
   }
 }

@@ -6,11 +6,11 @@
               <Icon type="ios-people" />
               <span>账户管理</span>
           </MenuItem>
-          <!--  <MenuItem name="product_list"  v-if="userType == '1'">
+           <MenuItem name="product_list"  v-if="userType == '1'">
               <Icon type="ios-construct" />
               <span>商品管理</span>
-          </MenuItem> -->
-          <MenuItem name="association_list"  v-if="userType == '1'">
+          </MenuItem>
+          <MenuItem name="association_list">
               <Icon type="ios-construct" />
               <span>合作机构管理</span>
           </MenuItem>

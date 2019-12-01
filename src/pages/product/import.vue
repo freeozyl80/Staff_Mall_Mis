@@ -71,7 +71,7 @@ export default {
               }
             })
           } else {
-            me.$router.push({name: 'product_list'})
+           me.$router.push({name: 'product_list'})
           }
         }, 1000)
       }

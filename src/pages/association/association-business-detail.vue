@@ -3,8 +3,9 @@
 
     <Breadcrumb>
       <BreadcrumbItem to="/home">首页</BreadcrumbItem>
-      <BreadcrumbItem  to="/home/association_list">合作机构列表</BreadcrumbItem>
-      <BreadcrumbItem  :to="'/home/association_business?fid='+ $route.query.fid +'&firmname=' + $route.query.firmname">{{$route.query.firmname}}: 商品列表</BreadcrumbItem>
+      <BreadcrumbItem  v-if="$route.query.fid"to="/home/association_list">合作机构列表</BreadcrumbItem>
+      <BreadcrumbItem  v-if="!$route.query.fid"to="/home/product_list">商品列表</BreadcrumbItem>
+      <BreadcrumbItem  v-if="$route.query.fid" :to="'/home/association_business?fid='+ $route.query.fid +'&firmname=' + $route.query.firmname">{{$route.query.firmname}}: 商品列表</BreadcrumbItem>
       <BreadcrumbItem  v-if="!isEdit">新增 商品</BreadcrumbItem>
       <BreadcrumbItem v-if="isEdit">编辑 商品入</BreadcrumbItem>
     </Breadcrumb> 
@@ -39,6 +40,10 @@
           <Input v-model="formData.productImg" placeholder="输入商品图片"></Input>
         </FormItem>
 
+        <FormItem label="商品图片" prop="productImg">
+          <Input v-model="formData.productImg" placeholder="输入商品图片"></Input>
+        </FormItem>
+
         <FormItem label="商品状态" prop="productStatus">
           <Select v-model="formData.productStatus">
               <Option v-for="(item, idx) in productStatusOptions" :key="idx" :value="item.id">{{item.value}}</Option>
@@ -53,6 +58,29 @@
             <Select v-model="formData.supplierId" @on-change="confimSupplier" :disabled="isEdit">
                  <Option v-for="(item, idx) in supplierOptions" :key="idx" :value="item.supplier_id">{{item.supplier_name}} ({{item.supplier_realname}})</Option>
             </Select>
+        </FormItem>
+
+
+        <Divider/>
+
+        <div class="custom-tag">
+          <Tag  v-for="(item, idx) in formData.productBannerList" closable @on-close="handleBannerClose(idx)" >
+            <img style="width: 100px;object-fit: contain" :src="item"/>
+          </Tag>
+        </div>
+
+        <FormItem label="商品轮播图片list" prop="productBannerItem">
+          <Input v-model="formData.productBannerItem" placeholder="输入商品图片, 回车确定" @on-enter="enterBanner"></Input>
+        </FormItem>
+
+        <div class="custom-tag">
+          <Tag size="large"  v-for="(item, idx) in formData.productDetailList" closable @on-close="handleDetailClose(idx)">
+            <img style="width: 100px;object-fit: contain" :src="item"/>
+          </Tag>
+        </div>
+
+        <FormItem label="商品详情图片list" prop="productDetailItem">
+          <Input v-model="formData.productDetailItem" placeholder="确定，回车确定" @on-enter="enterDetail"></Input>
         </FormItem>
 
         <FormItem>
@@ -111,7 +139,11 @@ export default {
         productCount: 0,
         productImg: '',
         productStatus: 1,
-        productDesc: ''
+        productDesc: '',
+        productDetailItem: '',
+        productBannerItem: '',
+        productBannerList: [],
+        productDetailList: []
       },
       rules: {
         productName: [
@@ -193,7 +225,7 @@ export default {
           ]);
         },
         onOk() {
-          this.$refs[name].validate((valid) => {
+          me.$refs[name].validate((valid) => {
             if (valid) {
               let formData = Object.assign({}, me.formData, me.isEdit ? {
                 fid: me.$route.query.fid,
@@ -205,13 +237,24 @@ export default {
                 if(res.errorCode == 0) {
                    me.$Message.success('商品操作成功');
                    setTimeout(() => {
-                    me.$router.push({ 
-                      name: 'association_business',
-                      query: {
-                        fid: me.$route.query.fid,
-                        firmname: me.$route.query.firmname
-                      }
-                    })
+                    if (me.$route.query.fid){
+                      me.$router.push({ 
+                        name: 'association_business',
+                        query: {
+                          fid: me.$route.query.fid,
+                          firmname: me.$route.query.firmname
+                        }
+                      })
+                    }
+                    else {
+                      me.$router.push({ 
+                        name: 'product_list',
+                        query: {
+                          fid: me.$route.query.fid,
+                          firmname: me.$route.query.firmname
+                        }
+                      })
+                    }
                    }, 2000)
                 }
               }, () => {
@@ -286,8 +329,28 @@ export default {
     },
     confimSupplier(val) {
       let me = this;
-      me.formData.supplierName = me.categoryData[val].supplierName
-      me.formData.supplierRealname = me.categoryData[val].supplierRealname
+      me.formData.supplierName = me.SupplierData[val].supplierName
+      me.formData.supplierRealname = me.SupplierData[val].supplierRealname
+    },
+    enterDetail() {
+      let me = this;
+      if (me.formData.productDetailItem.length > 0) {
+        me.formData.productDetailList.push(me.formData.productDetailItem)
+      }
+    },
+    enterBanner() {
+      let me = this;
+      if (me.formData.productBannerItem.length > 0) {
+        me.formData.productBannerList.push(me.formData.productBannerItem)
+      }
+    },
+    handleBannerClose(num) {
+      let me = this;
+      me.formData.productBannerList.splice(num, 1)
+    },
+    handleDetailClose(num) {
+      let me = this;
+      me.formData.productDetailList.splice(num, 1)
     }
   }
 }
@@ -296,5 +359,13 @@ export default {
 .mg-detail{
   padding: 40px;
   text-align: left;
+}
+</style>
+<style lang="less">
+.custom-tag {
+  .ivu-tag {
+    display: block !important;
+    height: auto;
+  }
 }
 </style>

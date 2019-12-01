@@ -50,6 +50,8 @@ export const firmUpdate = (params) => {
   bodyFormData.set('firmname', params.firmName);
   bodyFormData.set('firm_realname', params.firmRealName);
   bodyFormData.set('balance', params.balance);
+  bodyFormData.set('product_group', params.productGroup);
+  bodyFormData.set('category_group', params.categoryGroup);
 
   return axios.request({
     url: url,
@@ -157,6 +159,9 @@ export const firmProductCreate = (params) => {
   bodyFormData.set('product_status', params.productStatus);
   bodyFormData.set('product_desc', params.productDesc);
 
+  bodyFormData.set('product_banner_list', params.productBannerList.join(','));
+  bodyFormData.set('product_detail_list', params.productDetailList.join(','));
+
 
   return axios.request({
     url: url,
@@ -188,6 +193,9 @@ export const firmProductEdit = (params) => {
   bodyFormData.set('product_img', params.productImg);
   bodyFormData.set('product_status', params.productStatus);
   bodyFormData.set('product_desc', params.productDesc);
+
+  bodyFormData.set('product_banner_list', params.productBannerList.join(','));
+  bodyFormData.set('product_detail_list', params.productDetailList.join(','));
 
 
 
