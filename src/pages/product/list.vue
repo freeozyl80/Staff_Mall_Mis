@@ -16,7 +16,7 @@
    <Table :columns="columns" :data="listData" ref="selection" @on-selection-change="choose">
 
     <template slot-scope="{ row, index }" slot="product_img">
-      <img style="width: 100px;object-fit: contain":src="row.product_img"/>
+      <img style="width: 85px; height: 85px; object-fit: contain; border: 1px solid #999" :src="row.product_img"/>
     </template>
 
     <template slot-scope="{ row, index }" slot="product_status">
@@ -48,7 +48,7 @@ export default {
     return {
       total: 0,
       pageData: {
-        pageSize: 10,
+        pageSize: 20,
         pageIndex: 1
       },
       firmData: '',
@@ -64,7 +64,8 @@ export default {
         },
         {
           title: '商品id',
-          key: 'pid'
+          key: 'pid',
+          width: 60
         },
         {
           title: '商品名',
@@ -98,7 +99,7 @@ export default {
           title: '商品图片',
           key: 'product_img',
           slot: 'product_img',
-          width: 100,
+          width: 120,
         },
         {
           title: '商品状态',
@@ -133,7 +134,7 @@ export default {
       me.listData.forEach((product) => {
         product._disabled = false
       })
-            
+
       productArr.forEach((fproduct) => {
         me.listData.forEach((product) => {
           if(product.pid == fproduct) {
@@ -150,7 +151,7 @@ export default {
   },
   methods: {
     importProduct() {
-      this.$router.push({ 
+      this.$router.push({
         name: 'product_import'
       })
     },

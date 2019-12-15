@@ -5,7 +5,7 @@
       <BreadcrumbItem v-if="$route.query.firmname" to="/home/association_list">合作机构列表</BreadcrumbItem>
       <BreadcrumbItem v-if="$route.query.firmname" :to="'/home/association_account?fid='+ $route.query.fid +'&firmname=' + $route.query.firmname">{{$route.query.firmname}}: 员工列表</BreadcrumbItem>
       <BreadcrumbItem v-if="$route.query.firmname">{{$route.query.firmname}}: 员工导入</BreadcrumbItem>
-    </Breadcrumb> 
+    </Breadcrumb>
      <br/>
   	 <div class="tips">
   	 	 <p>1. 导入文件必须使用xlsx 文件</p>
@@ -28,7 +28,7 @@
           </div>
       </Upload>
      </div>
-     
+
   </div>
 </template>
 
@@ -57,7 +57,11 @@ export default {
     uploadCb(res) {
       let me = this;
       if(res.errorCode != 0) {
-        me.$Message.error(res.errorMsg + ":" + res.info);
+        me.$Message.error({
+          content: '员工创建成功失败' + res.errorMsg + ":" + res.info,
+          closable: true,
+          duration: 0
+        });
       } else {
         me.$Message.success("上传成功");
         setTimeout(() => {
@@ -65,14 +69,14 @@ export default {
             me.$router.push({
               name: me.$route.query.from,
               query: {
-                fid: me.$route.query.fid, 
+                fid: me.$route.query.fid,
                 firmname: me.$route.query.firmname
               }
             })
           } else {
             me.$router.push({name: 'account_list'})
           }
-        }, 1000)
+        }, 3000)
       }
     }
   }

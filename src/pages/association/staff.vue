@@ -6,21 +6,21 @@
       <BreadcrumbItem to="/home/association_list">合作机构列表</BreadcrumbItem>
       <BreadcrumbItem :to="'/home/association_account?fid='+ $route.query.fid +'&firmname=' + $route.query.firmname">{{$route.query.firmname}}: 员工列表</BreadcrumbItem>
       <BreadcrumbItem>机构{{$route.query.firmname}}：员工操作页面</BreadcrumbItem>
-    </Breadcrumb> 
+    </Breadcrumb>
 
     <br/>
     <div v-if="isEdit">
       <div class="staff-info">
-        <div>staff 姓名: <span>{{staffInfo.username}}</span></div>
-        <div>剩余福利点数: <span>{{staffInfo.coi}}</span></div>
+        <div>员工姓名: <span>{{staffInfo.username}}</span></div>
+        <div>福利点数: <span>{{staffInfo.coi}}</span></div>
       </div>
       <div style="max-width: 500px; text-align: left">
       </div>
 
       <Form ref="formData" :model="formData" :rules="rules" :label-width="100" width="400">
 
-        <FormItem label="增加福利点数" prop="coin">
-          <Input v-model="formData.coin" placeholder="输入coin" number></Input>
+        <FormItem label="福利点数调整" prop="coin">
+          <Input v-model="formData.coin" placeholder="增加或减少福利点数（减少请输入负数，比如 -100）" number></Input>
         </FormItem>
 
         <FormItem>
@@ -33,16 +33,15 @@
     <div v-else>
       <Form ref="formAddData" :model="formAddData" :rules="addRules" :label-width="100" width="400">
 
-        <FormItem label="员工账号名称" prop="username">
+        <FormItem label="员工账号名称（username）" prop="username">
           <Input v-model="formAddData.username" placeholder="输入员工账号名称（英文拼音）"></Input>
         </FormItem>
 
-
-        <FormItem label="员工姓名" prop="userRealname">
+        <FormItem label="员工姓名（userRealname）" prop="userRealname">
           <Input v-model="formAddData.userRealname" placeholder="输入员工姓名"></Input>
         </FormItem>
 
-        <FormItem label="员工密码" prop="password">
+        <FormItem label="员工密码（password）" prop="password">
           <Input v-model="formAddData.password" placeholder="输入员工密码"></Input>
         </FormItem>
 
@@ -70,18 +69,18 @@ export default {
       if (!Number.isInteger(value)) {
         callback(new Error('Please enter a numeric value'));
       } else {
-        if (value < 0) {
-          callback(new Error('Must be over of o coin'));
-        } else {
-          callback();
-        }
+        // if (value < 0) {
+        //   callback(new Error('Must be over of o coin'));
+        // } else {
+        callback();
+        // }
       }
     }
     return {
       isEdit: isEdit,
       staffInfo: {},
       formData: {
-        coin: 100
+        coin: null
       },
       formAddData: {
         username: '',
@@ -132,7 +131,11 @@ export default {
           if(res.ok) {
             me.staffInfo = res.data.info
           } else {
-            me.$Message.error(res.errorMsg + ":" + res.info);
+            me.$Message.error({
+              content: res.errorMsg + ":" + res.info,
+              closable: true,
+              duration: 0
+            })
           }
         })
       }
@@ -157,24 +160,36 @@ export default {
                 password: me.formAddData.password
               }).then ((res) => {
                 if(res.errorCode == 0) {
-                   me.$Message.success('员工创建成功:');
+                   me.$Message.success('员工创建成功, 5s后跳转回员工列表页:');
                    setTimeout(() => {
-                    me.$router.push({ 
+                    me.$router.push({
                       name: 'association_account',
                       query: {
                         fid: me.$route.query.fid,
                         firmname: me.$route.query.firmname
                       }
                     })
-                   }, 2000)
+                   }, 5000)
                 } else {
-                  me.$Message.error(res.errorMsg + ":" + res.info);
+                  me.$Message.error({
+                    content: res.errorMsg + ":" + res.info,
+                    closable: true,
+                    duration: 0
+                  })
                 }
               }, () => {
-                me.$Message.error('员工创建成功失败');
+                me.$Message.error({
+                  content: '员工创建成功失败',
+                  closable: true,
+                  duration: 0
+                })
               })
             } else {
-              me.$Message.error('请检查填写');
+              me.$Message.error({
+                content: '请检查填写',
+                closable: true,
+                duration: 0
+              })
             }
           })
         }
@@ -187,7 +202,7 @@ export default {
           var self = this;
           return createElement('div', [
               createElement('h2', '确认操作'),
-              createElement('h4', `确认添加员工福利点数${me.formData.coin}?`)
+              createElement('h4', `确认添加员工福利点数${me.formData.coin || 0}?`)
           ]);
         },
         onOk() {
@@ -196,20 +211,32 @@ export default {
               deliverStaffCoin({
                 fid: me.$route.query.fid,
                 uid: me.$route.query.uid,
-                coin: me.formData.coin
+                coin: me.formData.coin || 0
               }).then ((res) => {
                 if(res.errorCode == 0) {
                    me.$Message.success('员工福利点数操作成功:');
                    me.fetch()
                 } else {
                   console.log(res)
-                  me.$Message.error(res.errorMsg + ":" + res.info);
+                  me.$Message.error({
+                    content: res.errorMsg + ":" + res.info,
+                    closable: true,
+                    duration: 0
+                  })
                 }
               }, () => {
-                me.$Message.error('员工福利点数操作失败');
+                me.$Message.error({
+                  content: '员工福利点数操作失败',
+                  closable: true,
+                  duration: 0
+                })
               })
             } else {
-              me.$Message.error('请检查填写');
+              me.$Message.error({
+                content: '请检查填写',
+                closable: true,
+                duration: 0
+              })
             }
           })
         }

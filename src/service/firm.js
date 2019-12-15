@@ -97,6 +97,21 @@ export const accountList = ({pageIndex, pageSize, auth1}) => {
   })
 }
 
+// fid=1&page_index=1&page_size=10
+export const staffList = ({pageIndex, pageSize, auth1}) => {
+  let url = apiHost + '/manage/firm/staff/list'
+
+  return axios.request({
+    url: url,
+    method: 'get',
+    params: {
+      fid: auth1,
+      page_index: pageIndex,
+      page_size: pageSize
+    }
+  })
+}
+
 export const delegateFirm = ({auth1, uid, uname, type}) => {
   let url = apiHost + '/manage/firm/delegate'
 
@@ -154,7 +169,7 @@ export const firmProductCreate = (params) => {
   bodyFormData.set('supplier_id', params.supplierId);
   bodyFormData.set('supplier_name', params.supplierName);
   bodyFormData.set('supplier_realname', params.supplierRealname);
-  
+
   bodyFormData.set('product_price', params.productPrice);
   bodyFormData.set('product_count', params.productCount);
   bodyFormData.set('product_img', params.productImg);

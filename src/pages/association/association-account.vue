@@ -1,20 +1,20 @@
 <template>
   <div class="mg-detail">
-  
+
   <Breadcrumb>
       <BreadcrumbItem to="/home">首页</BreadcrumbItem>
       <BreadcrumbItem to="/home/association_list">合作机构列表</BreadcrumbItem>
       <BreadcrumbItem>{{$route.query.firmname}}: 员工列表</BreadcrumbItem>
-  </Breadcrumb> 
-  
-  <Button type="primary" style="margin:30px 0 30px;" @click="importStaff()">+ 导入员工列表</Button>
-  </br>
-  <Button type="default" style="margin:30px 0 30px;" @click="addStaff()">+ 新增单个员工</Button>
-  </br>
+  </Breadcrumb>
 
+  <Button type="primary" style="margin:30px 0 30px;" @click="importStaff()">+ 导入员工列表</Button>
+      &nbsp;&nbsp;&nbsp;
+  <Button type="default" style="margin:30px 0 30px;" @click="addStaff()">+ 新增单个员工</Button>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <span>福利点数调整：</span>&nbsp;
   <Input v-model="coin" placeholder="福利点数值" style="width: 100px" />
-   &nbsp;
-  <Button type="warning" style="margin:30px 0 30px;" @click="addCoin()">+ 批量增加福利点数</Button> 
+      &nbsp;
+  <Button type="warning" style="margin:30px 0 30px;" @click="addCoin()">+ 批量增加福利点数</Button>
 
    <Table :columns="columns" :data="listData">
      <template slot-scope="{ row, index }" slot="action">
@@ -37,7 +37,7 @@
 <script>
 
 
-import { accountList, delegateFirm, deliverStaffCoins } from '@src/service/firm'
+import { accountList, staffList, delegateFirm, deliverStaffCoins } from '@src/service/firm'
 
 import { accountRest } from '@src/service/account'
 
@@ -47,7 +47,7 @@ export default {
     return {
       total: 0,
       pageData: {
-        pageSize: 10,
+        pageSize: 20,
         pageIndex: 1
       },
       coin: 0,
@@ -59,6 +59,18 @@ export default {
         {
           title: '账户名',
           key: 'username'
+        },
+        {
+          title: '真实姓名',
+          key: 'realname'
+        },
+        {
+          title: '手机号',
+          key: 'tel'
+        },
+        {
+          title: '福利币点数',
+          key: 'coin'
         },
         {
           title: '操作',
@@ -95,18 +107,72 @@ export default {
     },
     fetch(index, size) {
       let me = this;
-      accountList({
-        auth1: me.$route.query.fid,
-        pageIndex: index || me.pageData.pageIndex,
-        pageSize: size || me.pageData.pageSize
-      }).then((res) => {
-        if(res.ok) {
-          me.listData = res.data.list || []
-          me.total = res.data.total
-        } else {
-          me.$Message.error(res.errorMsg + ":" + res.info);
+      Promise.all([
+        accountList({
+          // staffList({
+          auth1: me.$route.query.fid,
+          pageIndex: index || me.pageData.pageIndex,
+          pageSize: size || me.pageData.pageSize
+        }),
+        staffList({
+          auth1: me.$route.query.fid,
+          pageIndex: index || me.pageData.pageIndex,
+          pageSize: size || me.pageData.pageSize
+        })
+      ]).then(result => {
+        let isReady = true;
+        result.forEach(res => {
+          if(res.ok) {
+          } else {
+            isReady = false;
+            me.$Message.error(res.errorMsg + ":" + res.info);
+          }
+        });
+        if (isReady) {
+          let accountList = result[0].data.list || [];
+          let staffList = result[1].data.list || [];
+
+          const listData =  staffList.map(staff => {
+            let accountOutput = staff;
+            accountList.forEach(account => {
+              if (staff.uid === account.uid) {
+                accountOutput = {...staff, ...accountOutput};
+              }
+            });
+            return accountOutput;
+          });
+
+          me.listData = listData || [];
+          me.total = result[1].data.total;
         }
-      })
+      });
+
+      // accountList({
+      // // staffList({
+      //   auth1: me.$route.query.fid,
+      //   pageIndex: index || me.pageData.pageIndex,
+      //   pageSize: size || me.pageData.pageSize
+      // }).then((res) => {
+      //   if(res.ok) {
+      //     me.listData = res.data.list || []
+      //     me.total = res.data.total
+      //   } else {
+      //     me.$Message.error(res.errorMsg + ":" + res.info);
+      //   }
+      // })
+      //
+      // staffList({
+      //   auth1: me.$route.query.fid,
+      //   pageIndex: index || me.pageData.pageIndex,
+      //   pageSize: size || me.pageData.pageSize
+      // }).then((res) => {
+      //   if(res.ok) {
+      //     me.listData = res.data.list || []
+      //     me.total = res.data.total
+      //   } else {
+      //     me.$Message.error(res.errorMsg + ":" + res.info);
+      //   }
+      // })
     },
     delegate(item, type) {
       let me = this;
@@ -129,7 +195,7 @@ export default {
               me.$Message.success('管理员操作成功');
               setTimeout(() => {
                 me.fetch()
-              }, 1000)
+              }, 2000)
             } else {
               me.$Message.error(res.errorMsg + ":" + res.info);
             }
@@ -143,7 +209,7 @@ export default {
     },
     staff(item) {
       let me = this;
-      me.$router.push({ 
+      me.$router.push({
         name: 'association_staff',
         query: {
           mode: 'edit',
@@ -155,7 +221,7 @@ export default {
     },
     addStaff() {
       let me = this;
-      me.$router.push({ 
+      me.$router.push({
         name: 'association_staff',
         query: {
           mode: 'new',

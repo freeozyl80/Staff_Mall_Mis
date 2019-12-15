@@ -41,13 +41,21 @@ axios.interceptors.response.use(function (response) {
       data: {}
     }
   }
-}, function () {
+}, function (error) {
+
   return {
-    errorCode: 404,
-    errorMsg: '您访问的接口不存在',
+    errorCode: error.response.status,
+    errorMsg: error.response.data && error.response.data.info || '您访问的接口不存在',
     ok: false,
     data: {}
-  }
+  };
+
+  // return {
+  //   errorCode: 404,
+  //   errorMsg: '您访问的接口不存在',
+  //   ok: false,
+  //   data: {}
+  // }
 });
 
 
