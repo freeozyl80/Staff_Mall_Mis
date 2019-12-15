@@ -22,7 +22,7 @@ export const AdiminLogin = ({name, pwd, type}) => {
 
 export const AdminListRegister = apiHost + '/manage/user/import'
 
-export const accountList = ({pageIndex, pageSize}) => {
+export const accountList = ({pageIndex, pageSize, userType}) => {
   let url = apiHost + '/manage/user/list'
 
   return axios.request({
@@ -30,7 +30,19 @@ export const accountList = ({pageIndex, pageSize}) => {
     method: 'get',
     params: {
       page_index: pageIndex,
-      page_size: pageSize
+      page_size: pageSize,
+      user_type: userType
+    }
+  })
+}
+
+export const getAccountInfo = ({uid}) => {
+  let url = apiHost + '/manage/user/info'
+  return axios.request({
+    url: url,
+    method: 'get',
+    params: {
+      uid: uid
     }
   })
 }
@@ -49,3 +61,35 @@ export const accountRest = ({uid}) => {
     data: bodyFormData
   })
 }
+
+export const createService = ({name, realname, pwd}) => {
+  let url = apiHost + '/manage/service/create'
+
+  let bodyFormData = new FormData();
+  bodyFormData.set('name', name);
+  bodyFormData.set('realname', realname);
+  bodyFormData.set('pwd', pwd);
+  return axios.request({ 
+    url: url,
+    method: 'post',
+     headers: {
+      'Content-Type': 'application/form-data'
+    },
+    data: bodyFormData
+  })
+}
+export const offService = ({uid}) => {
+  let url = apiHost + '/manage/user/off'
+
+  let bodyFormData = new FormData();
+  bodyFormData.set('uid', uid);
+  return axios.request({ 
+    url: url,
+    method: 'post',
+     headers: {
+      'Content-Type': 'application/form-data'
+    },
+    data: bodyFormData
+  })
+}
+

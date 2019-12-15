@@ -17,6 +17,7 @@
             <RadioGroup v-model="formValidate.type">
               <Radio label="1">超级管理员</Radio>
               <Radio label="2">普通管理员</Radio>
+              <Radio label="4">客服</Radio>
             </RadioGroup> 
           </FormItem>
 

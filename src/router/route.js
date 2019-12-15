@@ -59,6 +59,21 @@ const routes = [
         component: () => import('@src/pages/association/list')
       },
       {
+        path: 'service_list',
+        name: 'service_list',
+        component: () => import('@src/pages/service/list')
+      },
+      {
+        path: 'order_list',
+        name: 'order_list',
+        component: () => import('@src/pages/order/list')
+      },
+      {
+        path: 'service_detail',
+        name: 'service_detail',
+        component: () => import('@src/pages/service/detail')
+      },
+      {
         path: 'association_detail/',
         name: 'association_detail',
         component: () => import('@src/pages/association/detail')

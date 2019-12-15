@@ -1,24 +1,17 @@
 <template>
   <div class="mg-list">
-    <Divider orientation="left">所有账户列表</Divider>
-    <!-- <div style="text-align: left;">
-     <Button type="primary" style="margin:30px 0 30px;" @click="importAccout()">+ 批量导入账户</Button>
-    </div> -->
+    <Divider orientation="left">客服账号列表</Divider>
+
+    <Button type="default" style="margin:30px 0 30px;" @click="addService()">+ 新增客服</Button>
+    </br>
+
      <Table :columns="columns1" :data="listData">
        <template slot-scope="{ row }" slot="usertype">
-         <p v-if="row.usertype == 1">系统管理员</p>
-         <p v-if="row.usertype == 2">客户负责人</p>
-         <p v-if="row.usertype == 3">员工</p>
          <p v-if="row.usertype == 4">客服</p>
         </template>
 
        <template slot-scope="{ row, index }" slot="action">
-        <!-- <div v-if="row.usertype != 1">
-          <Button class="mg-button" type="warning" size="small" style="margin-right: 5px" @click="rest(index)">重置</Button>
-          <Button class="mg-button" type="error" size="small" @click="remove(index)">删除</Button>
-          <Button class="mg-button" type="primary" size="small" @click="detail(row.id)">详情</Button>
-        </div> -->
-         
+          <Button class="mg-button" type="default" size="small" @click="detail(row, 'on')">客服操作</Button>
         </template>
      </Table>
 
@@ -78,12 +71,6 @@ export default {
     '$route': 'fetch'
   },
   methods: {
-    detail(id) {
-      this.$router.push({ name: 'account_detail', params: { id: id }})
-    },
-    importAccout() {
-      this.$router.push({ name: 'account_import'})
-    },
     jump(num) {
       let me = this
       me.pageData.pageIndex = num
@@ -93,7 +80,8 @@ export default {
       let me = this;
       accountList({
         pageIndex: index || me.pageData.pageIndex,
-        pageSize: size || me.pageData.pageSize
+        pageSize: size || me.pageData.pageSize,
+        userType: 4 
       }).then((res) => {
         if(res.ok) {
           me.listData = res.data.list
@@ -103,11 +91,33 @@ export default {
         }
       })
     },
+    addService() {
+      let me = this;
+      me.$router.push({ 
+        name: 'service_detail',
+        query: {
+          mode: 'new'
+        }
+      })
+    },
+    detail(item) {
+      let me = this;
+      me.$router.push({ 
+        name: 'service_detail',
+        query: {
+          mode: 'edit',
+          uid: item.id,
+          username: item.username,
+          realname: item.realname
+        }
+      })
+    }
   }
 }
 </script>
 <style lang="less" scoped>
 .mg-list {
+  text-align: left;
   padding: 40px;
   .mg-button {
     margin: 0 12px;

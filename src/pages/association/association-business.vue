@@ -9,7 +9,7 @@
   <br/>
 
   <Button type="primary" style="margin:30px 0 30px;" @click="importProduct()">+ 导入商品列表</Button>&nbsp;&nbsp;
-  <Button type="default" style="margin:30px 0 30px;" @click="createProduct()">+ 新建单个商品</Button>
+  <Button v-if="listData.length > 0" type="default" style="margin:30px 0 30px;" @click="createProduct()">+ 新建单个商品</Button>
 
    <Table :columns="columns" :data="listData">
 

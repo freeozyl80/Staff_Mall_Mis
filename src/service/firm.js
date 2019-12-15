@@ -50,7 +50,9 @@ export const firmUpdate = (params) => {
   bodyFormData.set('firmname', params.firmName);
   bodyFormData.set('firm_realname', params.firmRealName);
   bodyFormData.set('balance', params.balance);
+  if (params.productGroup)
   bodyFormData.set('product_group', params.productGroup);
+  if (params.categoryGroup)
   bodyFormData.set('category_group', params.categoryGroup);
 
   return axios.request({
