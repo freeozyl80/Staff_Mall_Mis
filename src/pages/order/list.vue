@@ -26,6 +26,7 @@
        <template slot-scope="{ row, index }" slot="action">
            <Button v-if="row.order_status != 5 && row.order_status != 1" class="mg-button" type="error" size="small" @click="cancelOrder(row)">立即退款</Button>
            <Button v-if="row.order_status == 2" class="mg-button" type="primary" size="small" @click="deliver(row)">发货完成</Button>
+           <Button type="default" size="small" @click="orderDetail(row)">查看详情</Button>
         </template>
      </Table>
 
@@ -190,7 +191,14 @@ export default {
           })
         }
       })
-    } 
+    },
+    orderDetail(item) {
+      let me = this
+      me.$router.push({ name: 'order_detail', query: {
+       id: item.order_id,
+       uid: item.uid
+     }})
+    }
   }
 }
 </script>

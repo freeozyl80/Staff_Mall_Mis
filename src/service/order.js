@@ -14,3 +14,16 @@ export const orderList = ({fid, pageIndex, pageSize}) => {
     }
   })
 }
+
+export const orderDetail = ({order_id, uid}) => {
+  let url = apiHost + '/manage/order/detail'
+
+  return axios.request({
+    url: url,
+    method: 'get',
+    params: {
+      order_id: order_id,
+      uid: uid
+    }
+  })
+}

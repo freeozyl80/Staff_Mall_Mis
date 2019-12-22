@@ -69,6 +69,11 @@ const routes = [
         component: () => import('@src/pages/order/list')
       },
       {
+        path: 'order_detail',
+        name: 'order_detail',
+        component: () => import('@src/pages/order/detail')
+      },
+      {
         path: 'service_detail',
         name: 'service_detail',
         component: () => import('@src/pages/service/detail')
