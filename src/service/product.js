@@ -1,9 +1,12 @@
 import axios from './axios'
-import { apiHost } from '@src/config'
-export const ProductListRegister = apiHost + '/manage/product/import'
+import { apiHost, apiDevHost } from '@src/config'
+
+let api = (NODE_ENV == 'development' ? apiDevHost : apiHost)
+
+export const ProductListRegister = api + '/manage/product/import'
 
 export const productList = ({pageIndex, pageSize, productStatus}) => {
-  let url = apiHost + '/manage/product/list'
+  let url = api + '/manage/product/list'
 
   return axios.request({
     url: url,

@@ -12,7 +12,7 @@ module.exports = {
   chainWebpack: config => {
     config.plugin('define').tap(definitions => {
       definitions[0] = Object.assign(definitions[0], {
-        NODE_ENV: process.env.NODE_ENV
+        NODE_ENV: JSON.stringify(process.env.NODE_ENV)
       })
       return definitions
     })

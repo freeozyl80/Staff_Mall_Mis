@@ -1,8 +1,10 @@
 import axios from './axios'
-import { apiHost } from '@src/config'
+import { apiHost, apiDevHost } from '@src/config'
+
+let api = (NODE_ENV == 'development' ? apiDevHost : apiHost)
 
 export const orderList = ({fid, pageIndex, pageSize}) => {
-  let url = apiHost + '/manage/order/list'
+  let url = api + '/manage/order/list'
 
   return axios.request({
     url: url,
@@ -16,7 +18,7 @@ export const orderList = ({fid, pageIndex, pageSize}) => {
 }
 
 export const orderDetail = ({order_id, uid}) => {
-  let url = apiHost + '/manage/order/detail'
+  let url = api + '/manage/order/detail'
 
   return axios.request({
     url: url,

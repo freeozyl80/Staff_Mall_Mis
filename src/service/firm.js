@@ -1,8 +1,10 @@
 import axios from './axios'
-import { apiHost } from '@src/config'
+import { apiHost, apiDevHost } from '@src/config'
+
+let api = (NODE_ENV == 'development' ? apiDevHost : apiHost)
 
 export const firmInfo = ({fid}) => {
-  let url = apiHost + '/manage/firm/detail'
+  let url = api + '/manage/firm/detail'
 
   return axios.request({
     url: url,
@@ -14,7 +16,7 @@ export const firmInfo = ({fid}) => {
 }
 
 export const firmList = ({pageIndex, pageSize}) => {
-  let url = apiHost + '/manage/firm/list'
+  let url = api + '/manage/firm/list'
 
   return axios.request({
     url: url,
@@ -27,7 +29,7 @@ export const firmList = ({pageIndex, pageSize}) => {
 }
 
 export const firmAdd = (params) => {
-  let url = apiHost + '/manage/firm/add'
+  let url = api + '/manage/firm/add'
 
   let bodyFormData = new FormData();
   bodyFormData.set('firmname', params.firmName);
@@ -44,7 +46,7 @@ export const firmAdd = (params) => {
   })
 }
 export const firmUpdate = (params) => {
-  let url = apiHost + '/manage/firm/update'
+  let url = api + '/manage/firm/update'
 
   let bodyFormData = new FormData();
   bodyFormData.set('firmname', params.firmName);
@@ -71,7 +73,7 @@ export const firmUpdate = (params) => {
 
 
 export const firmLsit = ({pageIndex, pageSize}) => {
-  let url = apiHost + '/manage/firm/list'
+  let url = api + '/manage/firm/list'
 
  return axios.request({
     url: url,
@@ -84,7 +86,7 @@ export const firmLsit = ({pageIndex, pageSize}) => {
 }
 
 export const accountList = ({pageIndex, pageSize, auth1}) => {
-  let url = apiHost + '/manage/firm/account'
+  let url = api + '/manage/firm/account'
 
   return axios.request({
     url: url,
@@ -99,7 +101,7 @@ export const accountList = ({pageIndex, pageSize, auth1}) => {
 
 // fid=1&page_index=1&page_size=10
 export const staffList = ({pageIndex, pageSize, auth1}) => {
-  let url = apiHost + '/manage/firm/staff/list'
+  let url = api + '/manage/firm/staff/list'
 
   return axios.request({
     url: url,
@@ -113,7 +115,7 @@ export const staffList = ({pageIndex, pageSize, auth1}) => {
 }
 
 export const delegateFirm = ({auth1, uid, uname, type}) => {
-  let url = apiHost + '/manage/firm/delegate'
+  let url = api + '/manage/firm/delegate'
 
   return axios.request({
     url: url,
@@ -128,7 +130,7 @@ export const delegateFirm = ({auth1, uid, uname, type}) => {
 }
 
 export const firmProductList = ({pageIndex, pageSize, fid}) => {
-  let url = apiHost + '/manage/product/firm/list'
+  let url = api + '/manage/product/firm/list'
 
   return axios.request({
     url: url,
@@ -143,7 +145,7 @@ export const firmProductList = ({pageIndex, pageSize, fid}) => {
 }
 // 新增
 export const firmProductDetail = ({fid, pid}) => {
-  let url = apiHost + '/manage/product/firm/detail'
+  let url = api + '/manage/product/firm/detail'
 
   return axios.request({
     url: url,
@@ -156,7 +158,7 @@ export const firmProductDetail = ({fid, pid}) => {
 }
 
 export const firmProductCreate = (params) => {
-  let url = apiHost + '/manage/product/firm/new'
+  let url = api + '/manage/product/firm/new'
 
   let bodyFormData = new FormData();
 
@@ -191,7 +193,7 @@ export const firmProductCreate = (params) => {
   })
 }
 export const firmProductEdit = (params) => {
-  let url = apiHost + '/manage/product/firm/update'
+  let url = api + '/manage/product/firm/update'
   let bodyFormData = new FormData();
 
   bodyFormData.set('fid', params.fid);
@@ -228,7 +230,7 @@ export const firmProductEdit = (params) => {
 }
 
 export const firmProductCategoryList = ({fid}) => {
-    let url = apiHost + '/manage/product/firm/categroy/list'
+    let url = api + '/manage/product/firm/categroy/list'
 
   return axios.request({
     url: url,
@@ -242,7 +244,7 @@ export const firmProductCategoryList = ({fid}) => {
 }
 
 export const supplierList = () => {
-  let url = apiHost + '/manage/supplier/list'
+  let url = api + '/manage/supplier/list'
 
   return axios.request({
     url: url,
@@ -257,7 +259,7 @@ export const supplierList = () => {
 
 // 新增结束
 export const getStaffInfo = ({uid, fid}) => {
-  let url = apiHost + `/manage/firm/staff`
+  let url = api + `/manage/firm/staff`
   return axios.request({
     url: url,
     method: 'get',
@@ -269,7 +271,7 @@ export const getStaffInfo = ({uid, fid}) => {
 }
 
 export const addStaff = (params) => {
-  let url = apiHost + `/manage/firm/staff/add`
+  let url = api + `/manage/firm/staff/add`
 
 
   let bodyFormData = new FormData();
@@ -292,7 +294,7 @@ export const addStaff = (params) => {
 }
 
 export const deliverStaffCoin = ({uid, fid, coin}) => {
-  let url = apiHost + `/manage/firm/staff/coin`
+  let url = api + `/manage/firm/staff/coin`
 
 
   let bodyFormData = new FormData();
@@ -314,7 +316,7 @@ export const deliverStaffCoin = ({uid, fid, coin}) => {
 }
 
 export const deliverStaffCoins = ({uids, fid, coin}) => {
-  let url = apiHost + `/manage/firm/staff/list/coin`
+  let url = api + `/manage/firm/staff/list/coin`
 
 
   let bodyFormData = new FormData();
@@ -336,7 +338,7 @@ export const deliverStaffCoins = ({uids, fid, coin}) => {
 }
 
 export const orderList = ({fid, pageIndex, pageSize}) => {
-  let url = apiHost + '/manage/order/list'
+  let url = api + '/manage/order/list'
 
   return axios.request({
     url: url,
@@ -350,7 +352,7 @@ export const orderList = ({fid, pageIndex, pageSize}) => {
 }
 
 export const cancelOrder = ({fid, orderId}) => {
-  let url = apiHost + '/manage/order/cancel'
+  let url = api + '/manage/order/cancel'
 
   let bodyFormData = new FormData();
   bodyFormData.set('orderId', orderId);
@@ -366,7 +368,7 @@ export const cancelOrder = ({fid, orderId}) => {
 }
 
 export const deliverOrder = ({fid, orderId}) => {
-  let url = apiHost + '/manage/order/deliver'
+  let url = api + '/manage/order/deliver'
 
   let bodyFormData = new FormData();
   bodyFormData.set('orderId', orderId);

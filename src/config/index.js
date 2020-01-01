@@ -1,5 +1,6 @@
 module.exports =  {
-  apiHost: 'NODE_ENV' == 'production' ? '' : '//127.0.0.1:8888',
+  apiDevHost: '//127.0.0.1:8888',
+  apiHost: '',
   appName: 'web',
   loginOpts: {
   	cookieKey: 'hualvmall_authorization'

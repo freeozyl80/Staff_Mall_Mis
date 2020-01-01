@@ -1,8 +1,9 @@
 import axios from './axios'
-import { apiHost } from '@src/config'
+import { apiHost, apiDevHost } from '@src/config'
 
+let api = (NODE_ENV == 'development' ? apiDevHost : apiHost)
 export const AuthCheck = () => {
-  let url = apiHost + '/manage/admin/auth'
+  let url = api + '/manage/admin/auth'
   return axios.request({
     url: url,
     method: 'get'
@@ -10,7 +11,7 @@ export const AuthCheck = () => {
 }
 
 export const getUserInfoApi = () => {
-  let url = apiHost + '/manage/user/userinfo'
+  let url = api + '/manage/user/userinfo'
    return axios.request({
     url: url,
     method: 'get'
@@ -18,7 +19,7 @@ export const getUserInfoApi = () => {
 }
 
 export const getQiniuToken = () => {
-  let url = apiHost + '/third/qiniu/token'
+  let url = api + '/third/qiniu/token'
    return axios.request({
     url: url,
     method: 'post'

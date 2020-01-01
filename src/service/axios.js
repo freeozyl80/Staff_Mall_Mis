@@ -2,6 +2,8 @@ import axios from 'axios'
 import config from '@src/config'
 import Cookies from 'js-cookie'
 
+
+console.log(NODE_ENV === 'production')
 axios.interceptors.request.use(conf=> {
   if ('NODE_ENV' === 'development') {
     conf.withCredentials = true

@@ -1,8 +1,10 @@
 import axios from './axios'
-import { apiHost } from '@src/config'
+import { apiHost, apiDevHost } from '@src/config'
+
+let api = (NODE_ENV == 'development' ? apiDevHost : apiHost)
 
 export const AdiminLogin = ({name, pwd, type}) => {
-  let url = apiHost + '/manage/admin/login'
+  let url = api + '/manage/admin/login'
 
   let bodyFormData = new FormData();
 
@@ -20,10 +22,10 @@ export const AdiminLogin = ({name, pwd, type}) => {
   })
 }
 
-export const AdminListRegister = apiHost + '/manage/user/import'
+export const AdminListRegister = api + '/manage/user/import'
 
 export const accountList = ({pageIndex, pageSize, userType}) => {
-  let url = apiHost + '/manage/user/list'
+  let url = api + '/manage/user/list'
 
   return axios.request({
     url: url,
@@ -37,7 +39,7 @@ export const accountList = ({pageIndex, pageSize, userType}) => {
 }
 
 export const getAccountInfo = ({uid}) => {
-  let url = apiHost + '/manage/user/info'
+  let url = api + '/manage/user/info'
   return axios.request({
     url: url,
     method: 'get',
@@ -48,7 +50,7 @@ export const getAccountInfo = ({uid}) => {
 }
 
 export const accountRest = ({uid}) => {
-  let url = apiHost + '/manage/user/reset'
+  let url = api + '/manage/user/reset'
 
   let bodyFormData = new FormData();
   bodyFormData.set('uid', uid);
@@ -63,7 +65,7 @@ export const accountRest = ({uid}) => {
 }
 
 export const createService = ({name, realname, pwd}) => {
-  let url = apiHost + '/manage/service/create'
+  let url = api + '/manage/service/create'
 
   let bodyFormData = new FormData();
   bodyFormData.set('name', name);
@@ -79,7 +81,7 @@ export const createService = ({name, realname, pwd}) => {
   })
 }
 export const offService = ({uid}) => {
-  let url = apiHost + '/manage/user/off'
+  let url = api + '/manage/user/off'
 
   let bodyFormData = new FormData();
   bodyFormData.set('uid', uid);
