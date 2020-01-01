@@ -16,3 +16,11 @@ export const getUserInfoApi = () => {
     method: 'get'
   })
 }
+
+export const getQiniuToken = () => {
+  let url = apiHost + '/third/qiniu/token'
+   return axios.request({
+    url: url,
+    method: 'post'
+  })
+}

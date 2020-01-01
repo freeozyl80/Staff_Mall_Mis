@@ -10,6 +10,12 @@ module.exports = {
   publicPath: BASE_URL,
   lintOnSave: false,
   chainWebpack: config => {
+    config.plugin('define').tap(definitions => {
+      definitions[0] = Object.assign(definitions[0], {
+        NODE_ENV: process.env.NODE_ENV
+      })
+      return definitions
+    })
     config.resolve.alias
       .set('@src', resolve('src'))
       .set('@components', resolve('src/components'))

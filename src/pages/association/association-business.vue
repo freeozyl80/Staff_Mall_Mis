@@ -28,7 +28,7 @@
    </Table>
 
     <template>
-        <Page :total="total" show-sizer=false :page-size="pageData.pageSize" :current="pageData.pageIndex" @on-change="jump"/>
+        <Page :total="total" :show-sizer=false :page-size="pageData.pageSize" :current="pageData.pageIndex" @on-change="jump"/>
     </template>
   </div>
 </template>

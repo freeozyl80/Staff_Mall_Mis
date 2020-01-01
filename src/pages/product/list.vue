@@ -10,6 +10,13 @@
   <Button type="primary" style="margin:30px 0 30px;" @click="addToFirm()">勾选后, 导入机构</Button>
 
   <br/>
+  <label>商品状态&nbsp;&nbsp;&nbsp;</label>
+  <Select v-model="productStatus" style="width:200px" @on-change="reload">
+    <Option value=1>有效商品管理</Option>
+    <Option value=2>失效商品管理</Option>
+  </Select>
+
+  <br/>
 
   <Button type="primary" style="margin:30px 0 30px;" @click="importProduct()">+ 导入商品列表</Button>
 
@@ -30,7 +37,7 @@
    </Table>
 
     <template>
-        <Page :total="total" show-sizer=false :page-size="pageData.pageSize" :current="pageData.pageIndex" @on-change="jump"/>
+        <Page :total="total" :show-sizer=false :page-size="pageData.pageSize" :current="pageData.pageIndex" @on-change="jump"/>
     </template>
   </div>
 </template>
@@ -47,6 +54,7 @@ export default {
   data() {
     return {
       total: 0,
+      productStatus: "1",
       pageData: {
         pageSize: 20,
         pageIndex: 1
@@ -160,9 +168,18 @@ export default {
       me.pageData.pageIndex = num
       me.fetch(me.pageData.pageIndex, me.pageData.pageSize)
     },
+    reload() {
+      let me = this;
+      me.pageData = {
+        pageSize: 20,
+        pageIndex: 1
+      }
+      me.fetch()
+    },
     fetch(index, size) {
       let me = this;
       productList({
+        productStatus: parseInt(me.productStatus, 10),
         pageIndex: index || me.pageData.pageIndex,
         pageSize: size || me.pageData.pageSize
       }).then((res) => {

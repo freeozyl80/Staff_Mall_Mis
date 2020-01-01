@@ -3,7 +3,9 @@ import config from '@src/config'
 import Cookies from 'js-cookie'
 
 axios.interceptors.request.use(conf=> {
-  //conf.withCredentials = true
+  if ('NODE_ENV' === 'development') {
+    conf.withCredentials = true
+  }
   let key = config.loginOpts.cookieKey
   conf.headers = Object.assign(conf.headers, {
     hualvmall_authorization: Cookies.get(key) || ''

@@ -37,12 +37,16 @@
         </FormItem>
 
         <FormItem label="商品图片" prop="productImg">
-          <Input v-model="formData.productImg" placeholder="输入商品图片"></Input>
+          <hupload @finsh="getUploadRes">
+            <Button>上传图片</Button>
+          </hupload>
+          <br/>
+          <img :src="formData.productImg" style="width: 100px;object-fit: contain"/>
         </FormItem>
 
-        <FormItem label="商品图片" prop="productImg">
+<!--         <FormItem label="商品图片" prop="productImg">
           <Input v-model="formData.productImg" placeholder="输入商品图片"></Input>
-        </FormItem>
+        </FormItem> -->
 
         <FormItem label="商品状态" prop="productStatus">
           <Select v-model="formData.productStatus">
@@ -70,7 +74,9 @@
         </div>
 
         <FormItem label="商品轮播图片list" prop="productBannerItem">
-          <Input v-model="formData.productBannerItem" placeholder="输入商品图片, 回车确定" @on-enter="enterBanner"></Input>
+           <hupload @finsh="getUploadRes2">
+            <Button>上传图片</Button>
+          </hupload>
         </FormItem>
 
         <div class="custom-tag">
@@ -80,7 +86,9 @@
         </div>
 
         <FormItem label="商品详情图片list" prop="productDetailItem">
-          <Input v-model="formData.productDetailItem" placeholder="确定，回车确定" @on-enter="enterDetail"></Input>
+          <hupload @finsh="getUploadRes3">
+            <Button>上传图片</Button>
+          </hupload>
         </FormItem>
 
         <FormItem>
@@ -99,7 +107,7 @@ import {firmProductEdit} from '@src/service/firm.js'
 import {firmProductCreate} from '@src/service/firm.js'
 import {firmProductCategoryList, supplierList} from '@src/service/firm.js'
 import {firmProductDetail} from '@src/service/firm.js'
-
+import upload from '@src/components/upload.vue'
 
 const Handle1 = function (data) {
   var resData = {}
@@ -122,6 +130,9 @@ const Handle2 = function (argument) {
 }
 export default {
   name: 'AssociationBusinessDetail',
+  components: {
+    hupload: upload
+  },
   data() {
     let isEdit = Boolean(this.$route.query.mode != 'new')
     return {
@@ -332,18 +343,6 @@ export default {
       me.formData.supplierName = me.SupplierData[val].supplierName
       me.formData.supplierRealname = me.SupplierData[val].supplierRealname
     },
-    enterDetail() {
-      let me = this;
-      if (me.formData.productDetailItem.length > 0) {
-        me.formData.productDetailList.push(me.formData.productDetailItem)
-      }
-    },
-    enterBanner() {
-      let me = this;
-      if (me.formData.productBannerItem.length > 0) {
-        me.formData.productBannerList.push(me.formData.productBannerItem)
-      }
-    },
     handleBannerClose(num) {
       let me = this;
       me.formData.productBannerList.splice(num, 1)
@@ -351,6 +350,18 @@ export default {
     handleDetailClose(num) {
       let me = this;
       me.formData.productDetailList.splice(num, 1)
+    },
+    getUploadRes(res) {
+      let me = this;
+      me.formData.productImg = res
+    },
+    getUploadRes3(res) {
+      let me = this;
+      me.formData.productDetailList.push(res)
+    },
+    getUploadRes2(res) {
+      let me = this;
+      me.formData.productBannerList.push(res)
     }
   }
 }

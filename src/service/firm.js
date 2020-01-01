@@ -135,6 +135,7 @@ export const firmProductList = ({pageIndex, pageSize, fid}) => {
     method: 'get',
     params: {
       fid: fid,
+      product_status: 1,
       page_index: pageIndex,
       page_size: pageSize
     }
